@@ -21,6 +21,3 @@ Parsers, given the URL of the primary, and if needed, secondary URLs should retr
     + Example: motivate\_llstatus.py
 + schemas (container of schema definitions)
   + Markdown files describing the schema (schema name in all lower case characters)
-
-## Deprecation
-    In order to keep the structure somewhat clean, some schemas may be deprecated in time, these will be relocated to a similar tree structure as the *parsers* but named *deprecated*.

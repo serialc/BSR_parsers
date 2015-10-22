@@ -4,45 +4,37 @@
 import json, re, urllib2, os
 from datetime import datetime
 
-def scrape(url, data_path, error_file, timeout_sec=20):
-    # retrieve data
+def get(bsr_df, save_dir='', timeout_sec=20, apikey='', save_raw=False):
+    # bsr_df is a dict with the following keys:
+    # [u'feedurl', u'feedname', u'bssid', u'format', u'feedurl2', u'keyreq', u'parsername', u'rid']
+
+    # 1. retrieve data
     try:
-        res = urllib2.urlopen( url, timeout=timeout_sec)
+        res = urllib2.urlopen( bsr_df['feedurl'], timeout=timeout_sec)
         utc = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
         url_data = res.read()
     except (urllib2.URLError, urllib2.HTTPError) as e:
-        log_error(error_file, 'Failed to retrieve url=' + url)
+        print utc + ' Failed to retrieve url=' + url
         return False
 
     # check data
     if url_data == "" or url_data == "False" or res.getcode() != 200:
-        log_error(error_file, 'Retrieved url=' + url + ' but contents are empty.')
+        print utc + ' Retrieved url=' + url + ' but contents are empty.'
         return False
 
-    filename = data_path.strip('/') + '/' + utc + '.txt'
-    fh = open(filename, 'w')
-    fh.write(url_data)
-    fh.close()
+    if save_raw:
+        fh = open(save_dir + bsr_df['bssid'] + '_raw_' + utc + '.txt', 'w')
+        fh.write(url_data)
+        fh.close()
 
-    return filename 
-
-def parse(source_file, output_file, error_file, delete_source=False):
-
-    # Part 1
-    # parse out desired info
-    ########################
-    
-    fh = open(source_file, 'r')
-    big_string = fh.read()
-    fh.close()
-
+    # 2. parse out desired info
     # does the file have valid content
-    if re.match('false', big_string) or re.match("\"\"(\s)+\n?", big_string) or re.match('[\s\"]*<html><head><title>Apache Tomcat', big_string):
+    if re.match('false', url_data) or re.match("\"\"(\s)+\n?", url_data) or re.match('[\s\"]*<html><head><title>Apache Tomcat', url_data):
         log_error(error_file, 'Parser found file to be empty of valid content.')
         return False
 
     # parse json data
-    data_json = json.loads(big_string)
+    data_json = json.loads(url_data)
     
     # check if we retreived the station list
     if not data_json.has_key('stationBeanList'):
@@ -75,30 +67,22 @@ def parse(source_file, output_file, error_file, delete_source=False):
             # try
             stnid = stn_dict['id']
         else:
-            log_error(error_file, "Parser did not find valid id/uaid in file: " + file + " for line: " + str(stn_dict))
+            print utc + " Parser did not find valid id/uaid in file: " + file + " for line: " + str(stn_dict)
             return False
 
         # build the list of valid data
         clean_stations_list.append([str(int(stnid)), str(stn_dict['latitude']), str(stn_dict['longitude']), str(stn_dict['availableBikes']), str(stn_dict['availableDocks'])])
 
-    # Part 2
-    # save cleaned version, and move all parsed files to the appropriate folder
-    ###########################################################################
-    
+    # 3. save parsed data
     # convert to a big string
     output = u''
     for line in clean_stations_list:
         output += "\t".join(str(part) for part in line) + "\n"
+
+    # add headers
+    output = 'id\tlat\tlong\tbikes\tspaces\n' + output
     
-    # move/archive all files from this timestamp
-    fh = open(output_file, 'w')
+    # save
+    fh = open(save_dir + bsr_df['bssid'] + '_' + utc + '.txt', 'w')
     fh.write(output.encode('utf8'))
-    fh.close()
-
-    if delete_source:
-        os.remove(source_file)
-
-def log_error(file, msg):
-    fh = open(file, 'a')
-    fh.write(datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S') + ':' + msg)
     fh.close()
