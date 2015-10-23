@@ -4,44 +4,41 @@
 import json, re, urllib2, os
 from datetime import datetime
 
-def scrape(url, data_path, error_file, timeout_sec=20, apikey):
-    # retrieve data
+def get(bsr_df, save_dir='', timeout_sec=20, apikey='', save_raw=False, save_raw_dir=''):
+    # bsr_df is a dict with the following keys:
+    # [u'feedurl', u'feedname', u'bssid', u'format', u'feedurl2', u'keyreq', u'parsername', u'rid']
+
+    # check an apikey is provided
+    if apikey == '':
+        print bsr_df['bssid'] + ' An API key from JCDecaux is required. See https://developer.jcdecaux.com'
+        return False
+
+    # 1. retrieve data
     try:
         # https://api.jcdecaux.com/vls/v1/stations?contract={contract_name}&apiKey={api_key}
-        res = urllib2.urlopen( url + apikey, timeout=timeout_sec)
         utc = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
+        res = urllib2.urlopen( bsr_df['feedurl'] + apikey, timeout=timeout_sec)
         url_data = res.read()
     except (urllib2.URLError, urllib2.HTTPError) as e:
-        log_error(error_file, 'Failed to retrieve url=' + url)
+        print utc + ' ' + bsr_df['bssid'] + ' Failed to retrieve url=' + bsr_df['feedurl']
         return False
 
     # check data
     if url_data == "" or url_data == "False" or res.getcode() != 200:
-        log_error(error_file, 'Retrieved url=' + url + ' but contents are empty.')
+        print utc + ' ' + bsr_df['bssid'] + ' Retrieved url=' + bsr_df['feedurl'] + ' but contents are empty.'
         return False
 
-    filename = data_path.strip('/') + '/' + utc + '.txt'
-    fh = open(filename, 'w')
-    fh.write(url_data)
-    fh.close()
+    if save_raw:
+        fh = open(save_dir + bsr_df['bssid'] + '_raw_' + utc + '.txt', 'w')
+        fh.write(url_data)
+        fh.close()
 
-    return filename 
-
-def parse(source_file, output_file, error_file, delete_source=False):
-
-    # Part 1
-    # parse out desired info
-    ########################
-    
-    fh = open(source_file, 'r')
-    big_string = fh.read()
-    fh.close()
-
+    # 2. parse out desired info
     # parse json data
     try:
-        json_data = json.loads(big_string)
+        json_data = json.loads(url_data)
     except ValueError:
-        log_error(error_file, "Parsing JSON failed for " + source_file)
+        print utc + ' ' + bsr_df['bssid'] + " Parsing JSON failed for " + bsr_df['feedurl']
         return False
 
     # capture clean results in clean_stations_list
@@ -52,27 +49,16 @@ def parse(source_file, output_file, error_file, delete_source=False):
 
     # check if we have some data
     if len(clean_stations_list) == 0:
-        log_error(error_file, "Parsing completed but no data found for " + source_file)
+        print utc + ' ' + bsr_df['bssid'] + " Parser did not find any station's data."
         return False
 
-    # Part 2
-    # save cleaned version, and move all parsed files to the appropriate folder
-    ###########################################################################
-    
-    # convert to a big string
-    output = u''
+    # 3. save parsed data
+    # convert to a big string and add headers
+    output = u'id\tlat\tlong\tbikes\tspaces\n'
     for line in clean_stations_list:
         output += "\t".join(str(part) for part in line) + "\n"
     
-    # move/archive all files from this timestamp
-    fh = open(output_file, 'w')
+    # save
+    fh = open(save_dir + bsr_df['bssid'] + '_' + utc + '.txt', 'w')
     fh.write(output.encode('utf8'))
-    fh.close()
-
-    if delete_source:
-        os.remove(source_file)
-
-def log_error(file, msg):
-    fh = open(file, 'a')
-    fh.write(datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S') + ':' + msg)
     fh.close()
