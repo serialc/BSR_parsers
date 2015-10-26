@@ -20,7 +20,7 @@ def get(bsr_df, output='file', save_dir='', timeout_sec=20, apikey='', save_raw=
         res = urllib2.urlopen( bsr_df['feedurl'] + apikey, timeout=timeout_sec)
         url_data = res.read()
     except (urllib2.URLError, urllib2.HTTPError) as e:
-        print utc + ' ' + bsr_df['bssid'] + ' Failed to retrieve url=' + bsr_df['feedurl']
+        print utc + ' ' + bsr_df['bssid'] + ' Failed to retrieve url=' + bsr_df['feedurl'] + apikey
         return False
 
     # check data
