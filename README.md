@@ -2,7 +2,7 @@
 Bicycle sharing system data feed parsing schemas and code
 
 ## Conventions
-Parsers simply need to be passed the bikeshare-research.org data feed containing all the necessary information - except for apikeys.
+Parsers simply need to be passed the bikeshare-research.org data feed item containing all the necessary information - except for apikeys.
 
 Additional attributes such as the directory to store formatted data, saving of raw data can be specified.
 
@@ -25,4 +25,4 @@ There exist two main types of BSS data feeds but it isn't necessary to know abou
 + Those that provide the station location and name, and in individual files, requiring individual requests, the status of each station. (e.g., [http://www.citycycle.com.au/service/carto](Brisbane) [http://www.citycycle.com.au/service/stationdetails/brisbane/1](station 1))
 
 ## To do
-* [ ] Create handlers the further simplify retrieval
+* [ ] Create handlers to further simplify retrieval

@@ -4,7 +4,7 @@
 import json, re, urllib2, os
 from datetime import datetime
 
-def get(bsr_df, save_dir='', timeout_sec=20, apikey='', save_raw=False, save_raw_dir=''):
+def get(bsr_df, output='file', save_dir='', timeout_sec=20, apikey='', save_raw=False, save_raw_dir=''):
     # bsr_df is a dict with the following keys:
     # [u'feedurl', u'feedname', u'bssid', u'format', u'feedurl2', u'keyreq', u'parsername', u'rid']
 
@@ -85,10 +85,16 @@ def get(bsr_df, save_dir='', timeout_sec=20, apikey='', save_raw=False, save_raw
 
     # 3. save parsed data
     # convert to a big string and add headers
+    if output == 'array':
+        return clean_stations_list
+
     output = u'id\tlat\tlong\tbikes\tspaces\n'
     for line in clean_stations_list:
         output += "\t".join(str(part) for part in line) + "\n"
     
+    if output == 'string':
+        return output
+
     # save
     fh = open(save_dir + bsr_df['bssid'] + '_' + utc + '.txt', 'w')
     fh.write(output.encode('utf8'))
