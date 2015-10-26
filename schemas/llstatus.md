@@ -34,6 +34,6 @@ Here are the parameter definitions in python:
 - Parsed filenames take the form [bssid]_[UTC date time].txt
 
 ### Other
-- Raw downloaded files, if requested, are named [bssid]_raw_[UTC date time].txt
+- Raw downloaded files, if requested, are named [bssid]\_raw\_[UTC date time].txt
 - Any station that is declared/determined to be out of service/down is omitted from results
 - In the situation where a BSS does not use id the field is left blank (while maintaining the tab spacing)
