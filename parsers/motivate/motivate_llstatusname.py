@@ -99,3 +99,5 @@ def get(bsr_df, output='file', save_dir='', timeout_sec=20, apikey='', save_raw=
     fh = open(save_dir + bsr_df['bssid'] + '_' + utc + '.txt', 'w')
     fh.write(output.encode('utf8'))
     fh.close()
+
+    return True;

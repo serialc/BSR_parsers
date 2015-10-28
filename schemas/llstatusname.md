@@ -22,6 +22,7 @@ Here are the parameter definitions in python:
 
 ## Outputs
 - Can return an array, string or save output to a file
+- Returns True (if not returning array or string) and successful, False otherwise.
 
 #### Array
 - Each element contains a sub array with [station id, latitude, longitude, # of available bikes, # of available docks, station name]
