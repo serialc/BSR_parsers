@@ -1,14 +1,14 @@
-# Schema llstatus
+# Schema fullset
 
 ## Description
-Provides the location (lat, long), available/functional number of bikes, docks and station identifier (id)
+Provides the location (lat, long), total docks, available/functional number of bikes, docks/spaces, station identifier (id) and name of station.
 
 ### Array format
-- Each element contains a sub array with [station id, latitude, longitude, # of available bikes, # of available docks]
+- Each element contains a sub array with [station id, latitude, longitude, # of docks at station, # of available bikes, # of available docks, station name]
 
 ### String or file format
 The string and file have the following characteristics:
-- First line has the headings: id  lat long    bikes   spaces
+- First line has the headings: id  lat long    docks    bikes   spaces   name
 - Tab separated values
 
 ### File output name
@@ -18,4 +18,4 @@ The string and file have the following characteristics:
 ### Other
 - Any station that is declared/determined to be out of service/down is omitted from results
 - In the situation where a BSS does not use id the field is left blank (while maintaining the tab spacing)
-- Number of docks, spaces and free docks are not always available - but two always are, we use these to reconstitute the third if necessary
+- Number of docks, spaces and free docks are not always available - but two always are, we use these to reconstitute the third
