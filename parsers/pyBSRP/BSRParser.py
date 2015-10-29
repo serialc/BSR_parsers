@@ -55,7 +55,7 @@ class BSRParser(object):
         # Everything looks good
         return self
 
-    def set_apikeys(self, apikey):
+    def set_apikey(self, apikey):
         """Provides the APIKEY for the BSS operator data feed."""
         self.apikey = apikey
         return self

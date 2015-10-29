@@ -43,7 +43,7 @@ lyon_data_feed = json.loads(lyon.read())[0]
 
 parser = BSRParser(lyon_data_feed)
 # we don't need to explicitly call retrieve(), saving will do so if necessary
-parser.set_apikeys('YOUR JCDECAUX API KEY').retrieve().save_raw('').save('')
+parser.set_apikey('YOUR JCDECAUX API KEY').retrieve().save_raw('').save('')
 # data is saved locally, done
 
 # You can convert the UTC time to the local timezone using the timezome attribute in '/systems/lyon/categories/base/'
