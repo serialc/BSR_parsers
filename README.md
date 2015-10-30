@@ -1,5 +1,5 @@
 # BSR_parsers
-These parsing protocols allow the simple collection of data from opeartor servers. In combination with the BSR API, downloading structured data is as simple as knowing the BSR id for the bicycle sharing system you desire data for.
+These parsing protocols allow the simple collection of data directly from Bicycle Sharing System (BSS) operator servers. In combination with the BSR API, downloading structured data is as simple as knowing the BSR id for the bicycle sharing system you desire data for.
 
 ## Conventions
 Parsers simply need to be passed the bikeshare-research.org data feed item containing all the necessary information (except when operator site apikeys are required, then those need to be specified as well).
