@@ -12,6 +12,9 @@ Parsers simply need to be passed the bikeshare-research.org data feed item conta
 + schemas (container of schema definitions)
   + Markdown files describing the schema (schema name in all lower case characters)
 
+## A short discussion of BSS types
+Not all BSS use stations as trip start/end points. Some systems allow free floating bicycles, which can be locked to any bicycle rack. The location is shared/specified by GPS or in some cases an SMS message by the user. These bikes typically need to still be kept within a zone called a FlexZone (nextbike) or service area (SOBI). Simply providing the number of bikes and spaces at a station is no longer sufficient. Individual bikes and locations need to be specified as well as station statuses. We're still working on what form this data should take.
+
 ## Python example
 ```python
 import urllib2, json
