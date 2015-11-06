@@ -40,16 +40,16 @@ class BSRParser(object):
                 res = urllib2.urlopen( self.df['feedurl'] + self.apikey, timeout=self.timeout)
                 self.raw_data = res.read()
                 if res.getcode() != 200:
-                    print self.utc + ' ' + bsr_df['bssid'] + ' Failed to retrieve url=' + bsr_df['feedurl']
+                    print self.utc + ' ' + self.df['bssid'] + ' Request code=' + res.getcode() + '. Failed to retrieve url=' + self.df['feedurl']
                     return False
 
             except (urllib2.URLError, urllib2.HTTPError) as e:
-                print self.utc + ' ' + bsr_df['bssid'] + ' Failed to retrieve url=' + bsr_df['feedurl']
+                print self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl']
                 return False
 
         # check data (self.raw_data)
         if self.raw_data == "" or self.raw_data == "False":
-            print self.utc + ' ' + bsr_df['bssid'] + ' Retrieved url=' + bsr_df['feedurl'] + ' but contents are empty.'
+            print self.utc + ' ' + self.df['bssid'] + ' Retrieved url=' + self.df['feedurl'] + ' but contents are empty.'
             return False
 
         # Everything looks good
@@ -120,21 +120,35 @@ class BSRParser(object):
             self.parse()
         return self.schematize(schema, 'string')
 
-    def schematize(self, schema='fullset', return_type='string'):
+    def schematize(self, schema='fullset', return_type='string', sep=''):
         """Returns the data in schematized format, array or string"""
         if not self.clean_data:
             self.parse()
 
         # self.clean_data contains
         # [0] stnid, [1] lat, [2] lng, [3] docks, [4] bikes, [5] spaces, [6] name
-        headings = {'id':0, 'lat':1, 'lng':2, 'docks':3, 'bikes':4, 'spaces':5, 'name':6}
+        headings = {'id':0, 'lat':1, 'lng':2, 'docks':3, 'bikes':4, 'spaces':5, 'name':6, 'active':7}
+        headingsa = ['id', 'lat', 'lng', 'docks', 'bikes', 'spaces', 'name', 'active'] # don't generate this using keys() - order is primordial!
+
+        # DEFINE what headings/items are included in schema
         if schema == 'fullset':
-            schema_indices = range(7)
+            schema_indices = range(8)
         elif schema == 'llstatus':
             schema_indices = [0, 1, 2, 4, 5]
         else:
             print self.utc + " Requested schema '" + schema + "' not found."
             return False
+
+        # DEFINE separator according to schema but allow overide
+        if sep == '':
+            if schema == 'fullset':
+                sep = '\t'
+            elif schema == 'llstatus':
+                sep = '\t'
+            else:
+                print self.utc + " Schema '" + schema + "' does not have a separator definition. BUG!"
+                return False
+        # sep is defined
 
         output_array = []
         # build array with only the required columns
@@ -146,11 +160,11 @@ class BSRParser(object):
             return output_array
         elif return_type == 'string':
             # add headings according to schema
-            output_array = [[ ['id', 'lat', 'lng', 'docks', 'bikes', 'spaces', 'name'][i] for i in schema_indices ]] + output_array
+            output_array = [[ headingsa[i] for i in schema_indices ]] + output_array
 
             output_string = u''
             for line in output_array:
-                output_string += "\t".join(str(part).decode('utf8') for part in line) + "\n"
+                output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
             return output_string
         else:
             print self.utc + " Unknown output type '" + return_type + "' requested."

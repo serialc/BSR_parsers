@@ -36,12 +36,6 @@ def parse(df, data, utc):
     # capture clean results in clean_stations_list
     clean_stations_list = []
     for stn_dict in stations_list:
-        # check if the station is online
-        if stn_dict['statusValue'] != 'In Service':
-            # The station can be 'Not In Service' or 'Planned'
-            # skip tracking this station, go to next
-            continue
-
         stnid = -1
         if 'uaid' in stn_dict:
         # try chattanooga style id
@@ -54,8 +48,17 @@ def parse(df, data, utc):
             return False
 
         # build the list of valid data
-        # stnid, lat, lng, docks, bikes, spaces, name
-        clean_stations_list.append([str(int(stnid)), str(stn_dict['latitude']), str(stn_dict['longitude']), str(stn_dict['totalDocks']), str(stn_dict['availableBikes']), str(stn_dict['availableDocks']), stn_dict['stationName']])
+        # check if the station is online
+        if stn_dict['statusValue'] == 'In Service':
+            # stnid, lat, lng, docks, bikes, spaces, name, active
+            clean_stations_list.append([str(int(stnid)), str(stn_dict['latitude']), str(stn_dict['longitude']), str(stn_dict['totalDocks']), str(stn_dict['availableBikes']), str(stn_dict['availableDocks']), stn_dict['stationName'], 'yes'])
+        else:
+            # The station can be 'Not In Service', 'Planned' or something unknown
+            try:
+                clean_stations_list.append([str(int(stnid)), str(stn_dict['latitude']), str(stn_dict['longitude']), str(stn_dict['totalDocks']), str(stn_dict['availableBikes']), str(stn_dict['availableDocks']), stn_dict['stationName'], 'no'])
+            except:
+                # information is missing to provide the full set, just skip
+                continue
 
     # check if we have some data
     if len(clean_stations_list) == 0:

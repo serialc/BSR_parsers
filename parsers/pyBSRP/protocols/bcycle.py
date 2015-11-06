@@ -50,8 +50,8 @@ def parse(df, data, utc):
                     bikes = int(attr_match.group(2))
                     spaces = int(attr_match.group(3))
 
-                    # stnid, lat, lng, docks, bikes, spaces, name
-                    clean_stations_list.append([0, stn_dict['lat'], stn_dict['lng'], bikes + spaces, bikes, spaces, name])
+                    # stnid, lat, lng, docks, bikes, spaces, name, active
+                    clean_stations_list.append([0, stn_dict['lat'], stn_dict['lng'], bikes + spaces, bikes, spaces, name, 'yes'])
 
                     # reset to -1
                     stn_dict['lat'] = -1

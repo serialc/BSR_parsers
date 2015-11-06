@@ -19,7 +19,7 @@ def parse(df, data, utc):
     # stnid, lat, lng, docks, bikes, spaces, name
     clean_stations_list = []
     for stn in json_data:
-        clean_stations_list.append([stn['number'], stn['position']['lat'], stn['position']['lng'], stn['bike_stands'], stn['available_bikes'], stn['available_bike_stands'], stn['name'].encode('utf8')])
+        clean_stations_list.append([stn['number'], stn['position']['lat'], stn['position']['lng'], stn['bike_stands'], stn['available_bikes'], stn['available_bike_stands'], stn['name'].encode('utf8'), 'yes'])
 
     # check if we have some data
     if len(clean_stations_list) == 0:
