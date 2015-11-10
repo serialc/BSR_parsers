@@ -55,6 +55,13 @@ class BSRParser(object):
         # Everything looks good
         return self
 
+    def retrieve_raw(self, filepath):
+        """Retrieves file and stores it as if it had been downloaded, allowing parsing."""
+        fh = open(filepath, 'r')
+        self.raw_data = fh.read()
+        fh.close()
+        return self
+
     def set_apikey(self, apikey):
         """Provides the APIKEY for the BSS operator data feed."""
         self.apikey = apikey
