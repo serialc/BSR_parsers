@@ -13,6 +13,7 @@ def parse(df, data, utc):
     hot_zone = False
     hot_line = 1
     stn_dict = dict()
+    active_available = 'no'
     clean_stations_list = []
 
     # parse line by line
@@ -31,6 +32,12 @@ def parse(df, data, utc):
         if hot_zone:
             # start parsing each line for lat/long or attributes
             try:
+                active_match = re.match("var back = '(.+)';", line)
+                if active_match:
+                    if active_match.group(1) == 'makerAvailable':
+                        active_available = 'yes'
+                    # else it stays 'no'
+
                 ll_match = re.match("var point = new google.maps.LatLng\(([\-0-9.]+),\s*([\-0-9.]+)\)", line)
 
                 if ll_match:
@@ -51,11 +58,12 @@ def parse(df, data, utc):
                     spaces = int(attr_match.group(3))
 
                     # stnid, lat, lng, docks, bikes, spaces, name, active
-                    clean_stations_list.append([0, stn_dict['lat'], stn_dict['lng'], bikes + spaces, bikes, spaces, name, 'yes'])
+                    clean_stations_list.append([0, stn_dict['lat'], stn_dict['lng'], bikes + spaces, bikes, spaces, name, active_available])
 
-                    # reset to -1
+                    # reset
                     stn_dict['lat'] = -1
                     stn_dict['lng'] = -1
+                    active_available = 'no'
 
             except (IndexError, KeyError) as e:
                 print(utc + ' ' + df['bssid'] + " Something is wrong with the line:\n" + line + "\nParsing for this BSS stopped. Error msg: \n" + str(e))
