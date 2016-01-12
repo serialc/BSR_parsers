@@ -1,4 +1,6 @@
-import os, imp
+import os, imp, urllib2
+from datetime import datetime
+import bsrutil
 
 class BSRParser(object):
     """ Class for the retrieving data from BSS data feeds.
@@ -18,6 +20,7 @@ class BSRParser(object):
         self.timeout = 20
         self.raw_data = False
         self.clean_data = False
+        self.complex_scrape = False
 
     def set_timeout(self, timeout):
         """Set the timeout duration for scraping calls"""
@@ -28,15 +31,16 @@ class BSRParser(object):
 
     def retrieve(self):
         """Retrieves the parsed contents of the data feed from the operator's server."""
+
+        # The time of the data retrieval
+        self.utc = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
         try:
             # See if the the parser protocol has a scraper function
             self.raw_data = self.proto.scrape(self.df, self.apikey)
+            self.complex_scrape = True
         except AttributeError:
-            import urllib2
-            from datetime import datetime
-            # simple scrape
+            # there exists no complex scrape so use a simple scrape
             try:
-                self.utc = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
                 res = urllib2.urlopen( self.df['feedurl'] + self.apikey, timeout=self.timeout)
                 self.raw_data = res.read()
                 if res.getcode() != 200:
@@ -56,7 +60,7 @@ class BSRParser(object):
         return self
 
     def retrieve_raw(self, filepath):
-        """Retrieves file and stores it as if it had been downloaded, allowing parsing."""
+        """Retrieves file and stores it as if it had been downloaded, allowing parsing without downloading."""
         fh = open(filepath, 'r')
         self.raw_data = fh.read()
         fh.close()
@@ -84,6 +88,7 @@ class BSRParser(object):
         if not self.raw_data:
             self.retrieve();
         self.clean_data = self.proto.parse(self.df, self.raw_data, self.utc)
+
         if not self.clean_data:
             print self.utc + " Failed to clean data."
             return False
