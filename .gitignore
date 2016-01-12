@@ -1,1 +1,9 @@
+# Compiled python modules.
 *.pyc
+
+# Setuptools distribution folder.
+parsers/pyBSRP/dist/
+parsers/pyBSRP/build/
+
+# Python egg metadata, regenerated from source files by setuptools.
+parsers/pyBSRP/*.egg-info

@@ -15,11 +15,11 @@ chicago_data_feed = chicago_feeds_json[len(chicago_feeds_json)-1]
 # git clone https://github.com/serialc/BSR_parsers.git
 
 # load the python parser
-from pyBSRP.BSRParser import BSRParser
+import pyBSRP
 
 # Example 1: Chicago and method chaining
 # create instance of parser with data feed details
-parser = BSRParser(chicago_data_feed)
+parser = pyBSRP.BSRParser(chicago_data_feed)
 
 # retrieving will return False or, if successfull, the parser object (self)
 parser.retrieve()
