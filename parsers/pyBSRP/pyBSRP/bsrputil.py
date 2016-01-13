@@ -110,7 +110,7 @@ def mp_post(par):
     if not retrieved_data:
         return False
 
-    return [stn_num, retrieved_data]
+    return retrieved_data
 
 def mp_get(par):
 
@@ -125,4 +125,4 @@ def mp_get(par):
     if not retrieved_data:
         return False
 
-    return [stn_num, retrieved_data]
+    return retrieved_data
