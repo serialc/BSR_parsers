@@ -91,9 +91,6 @@ def multiprocess_data(data, method='get'):
     finally:
         # close pool and release memory
         pool.close()
-        # wait five seconds to give a chance to all processes to return - this avoids zombies
-        time.sleep(5)
-        pool.terminate()
         pool.join()
 
         return stns

@@ -1,5 +1,6 @@
 import os, imp, urllib2
 from datetime import datetime
+from pyBSRP import bsrputil
 
 class BSRParser(object):
     """ Class for the retrieving data from BSS data feeds.
@@ -41,18 +42,19 @@ class BSRParser(object):
         except AttributeError:
             # there exists no complex scrape so use a simple scrape
             try:
-                res = urllib2.urlopen( self.df['feedurl'] + self.apikey, timeout=self.timeout)
-                self.raw_data = res.read()
-                if res.getcode() != 200:
-                    print self.utc + ' ' + self.df['bssid'] + ' Request code=' + res.getcode() + '. Failed to retrieve url=' + self.df['feedurl']
-                    return False
+                self.raw_data = bsrputil.get_url(self.df['feedurl'] + self.apikey, self.df['bssid'])
+                #res = urllib2.urlopen( self.df['feedurl'] + self.apikey, timeout=self.timeout)
+                #self.raw_data = res.read()
+                #if res.getcode() != 200:
+                #    print self.utc + ' ' + self.df['bssid'] + ' Request code=' + res.getcode() + '. Failed to retrieve url=' + self.df['feedurl']
+                #    return False
 
             except (urllib2.URLError, urllib2.HTTPError) as e:
                 print self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl']
                 return False
 
         # check data (self.raw_data)
-        if self.raw_data == "" or self.raw_data == "False":
+        if self.raw_data == "" or self.raw_data == "False" or self.raw_data == False:
             print self.utc + ' ' + self.df['bssid'] + ' Retrieved url=' + self.df['feedurl'] + ' but contents are empty.'
             return False
 
