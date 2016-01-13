@@ -10,7 +10,8 @@ class BSRParser(object):
     def __init__(self, bsr_feed):
         """Returns a BSRParser object containing feed details."""
         # Load the appropriate parser module
-        self.proto = imp.load_source('protocol', os.path.dirname(os.path.abspath(__file__)) + '/protocols/' + bsr_feed['parsername'] + '.py')
+        #self.proto = imp.load_source('protocol', os.path.dirname(os.path.abspath(__file__)) + '/protocols/' + bsr_feed['parsername'] + '.py')
+        self.proto = imp.load_source('protocol', '/protocols/' + bsr_feed['parsername'] + '.py')
         self.df = bsr_feed
 
         # set defaults

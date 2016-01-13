@@ -8,5 +8,6 @@ setup(name='pyBSRP',
     author_email='cyrille.mdc@gmail.com',
     license='MIT',
     packages=['pyBSRP'],
+    package_data = { 'pyBSRP': [ 'protocols/*.py' ] },
     install_requires=[ 'beautifulsoup4' ],
     zip_safe=False)
