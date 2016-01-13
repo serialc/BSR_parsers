@@ -77,19 +77,20 @@ def get_url(url, city, method="GET", post_data='', stn='', attempt=0, tries = -1
 def multiprocess_data(data, method='get'):
     from multiprocessing import Pool
     
-    # create a pool of 16 workers
-    pool = Pool(processes = 16)
+    try:
+        # create a pool of 16 workers
+        pool = Pool(processes = 16)
 
-    # make calls for each item in stn_list
-    # determine if we are using get/post
-    if method == 'get':
-        stns = pool.map(mp_get, data)
-    else:
-        stns = pool.map(mp_post, data)
-
-    # close pool and release memory
-    pool.close()
-    pool.join()
+        # make calls for each item in stn_list
+        # determine if we are using get/post
+        if method == 'get':
+            stns = pool.map(mp_get, data)
+        if method == 'post':
+            stns = pool.map(mp_post, data)
+    finally:
+        # close pool and release memory
+        pool.close()
+        pool.join()
 
     return stns
 
