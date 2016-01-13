@@ -90,9 +90,11 @@ def multiprocess_data(data, method='get'):
     finally:
         # close pool and release memory
         pool.close()
-        pool.join()
+        # wait five seconds to give a chance to all processes to return
+        pool.join(5)
 
-    return stns
+        return stns
+
 
 def mp_post(par):
 
@@ -107,7 +109,7 @@ def mp_post(par):
     if not retrieved_data:
         return False
 
-    return retrieved_data
+    return [stn_num, retrieved_data]
 
 def mp_get(par):
 
@@ -122,7 +124,4 @@ def mp_get(par):
     if not retrieved_data:
         return False
 
-    return retrieved_data
-    
-if __name__ == "__main__":
-    print("util.py is being run as the main module - how strange.")
+    return [stn_num, retrieved_data]
