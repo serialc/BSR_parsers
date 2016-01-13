@@ -88,6 +88,7 @@ class BSRParser(object):
         if not self.raw_data:
             self.retrieve();
         self.clean_data = self.proto.parse(self.df, self.raw_data, self.utc)
+
         if not self.clean_data:
             print self.utc + " Failed to clean data."
             return False
