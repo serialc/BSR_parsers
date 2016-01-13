@@ -1,6 +1,5 @@
 import os, imp, urllib2
 from datetime import datetime
-import bsrutil
 
 class BSRParser(object):
     """ Class for the retrieving data from BSS data feeds.
