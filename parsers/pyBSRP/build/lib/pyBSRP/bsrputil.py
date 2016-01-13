@@ -76,6 +76,7 @@ def get_url(url, city, method="GET", post_data='', stn='', attempt=0, tries = -1
 
 def multiprocess_data(data, method='get'):
     from multiprocessing import Pool
+    import time
     
     try:
         # create a pool of 16 workers
@@ -90,11 +91,11 @@ def multiprocess_data(data, method='get'):
     finally:
         # close pool and release memory
         pool.close()
-        # wait five seconds to give a chance to all processes to return
-        pool.join(5)
+        pool.join()
+        # wait five seconds to give a chance to all processes to return - this avoids zombies
+        time.sleep(5)
 
         return stns
-
 
 def mp_post(par):
 
