@@ -4,7 +4,6 @@
 import urllib2
 from datetime import datetime
 from bs4 import BeautifulSoup
-from pyBSRP import bsrputil
 
 def scrape(df, apikey):
 
@@ -27,14 +26,20 @@ def scrape(df, apikey):
         stns_list.append(marker)
 
     # Part 2 of 2 - Requesting individual stations
-    data_list = []
+    stations_data = dict()
     # append important info stn_list list
     for stn in stns_list:
-        data_list.append([df['feedurl2'], stn['number'], df['bssid']])
+        try:
+            stn_res = urllib2.urlopen( df['feedurl2'] + stn['number'], timeout=20)
 
-    # MULTIPROCESSING
-    # Returns array of XML
-    return [stns_list, bsrputil.multiprocess_data(data_list)]
+            if stn_res and stn_res.getcode() == 200:
+                stations_data[stn['number']] = stn_res.read()
+
+        except (urllib2.URLError, urllib2.HTTPError) as e:
+            print utc + ' ' + df['bssid'] + ' Skipping station ' + stn['number'] + '.'
+            stations_data[stn['number']] = False
+
+    return [stns_list, stations_data]
 
 def parse(df, data, utc):
     # df is a dict with the following keys:
@@ -62,14 +67,15 @@ def parse(df, data, utc):
         # data[0] has BS4 tags
         stn_name = data[0][stnnum]
         # data[1] has text
-        stn_state = BeautifulSoup(data[1][stnnum]).find('station')
+        stn_state = BeautifulSoup(data[1][stn_name['number']]).find('station')
 
         # open station? Active?
         stn_connected = 'no'
         if stn_state.connected.string == '1':
             stn_connected= 'yes'
 
-        clean_stations_list.append([stn_name['number'],
+        clean_stations_list.append(
+            [stn_name['number'],
             stn_name['lat'],
             stn_name['lng'],
             stn_state.total.string,
