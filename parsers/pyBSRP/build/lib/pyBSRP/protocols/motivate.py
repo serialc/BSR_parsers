@@ -51,7 +51,7 @@ def parse(df, data, utc):
         # check if the station is online
         if stn_dict['statusValue'] == 'In Service':
             # stnid, lat, lng, docks, bikes, spaces, name, active
-            clean_stations_list.append([str(int(stnid)), str(stn_dict['latitude']), str(stn_dict['longitude']), str(stn_dict['totalDocks']), str(stn_dict['availableBikes']), str(stn_dict['availableDocks']), stn_dict['stationName'], 'yes'])
+            clean_stations_list.append([str(stnid), str(stn_dict['latitude']), str(stn_dict['longitude']), str(stn_dict['totalDocks']), str(stn_dict['availableBikes']), str(stn_dict['availableDocks']), stn_dict['stationName'], 'yes'])
         else:
             # The station can be 'Not In Service', 'Planned' or something unknown
             try:
