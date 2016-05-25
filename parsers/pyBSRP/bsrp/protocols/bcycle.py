@@ -54,8 +54,11 @@ def parse(df, data, utc):
                     # determine type of syntax
                     if len(soup.find_all('strong')) == 3:
                         soupparts = soup.find_all('strong')
-                    else:
+                    elif len(soup.find_all('h3')) == 3:
                         soupparts = soup.find_all('h3')
+                    else:
+                        # something odd, skip
+                        continue
 
                     name = soupparts[0].string.encode('utf8')
                     bikes = soupparts[1].string
