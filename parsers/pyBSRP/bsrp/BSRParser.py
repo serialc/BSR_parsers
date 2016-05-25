@@ -1,4 +1,4 @@
-import os, imp, urllib2
+import os, imp, urllib2, json, imp
 from datetime import datetime
 from pyBSRP import bsrputil
 
@@ -10,6 +10,12 @@ class BSRParser(object):
 
     def __init__(self, bsr_feed):
         """Returns a BSRParser object containing feed details."""
+
+        # Check if a parser module is set in feed
+        if bsr_feed['parsername'] is None:
+            print "This feed has no designated parser set. Update on BSR and try again."
+            return
+
         # Load the appropriate parser module
         self.proto = imp.load_source('protocol', os.path.dirname(os.path.abspath(__file__)) + '/protocols/' + bsr_feed['parsername'] + '.py')
         #self.proto = imp.load_source('protocol', '/protocols/' + bsr_feed['parsername'] + '.py')
@@ -35,12 +41,12 @@ class BSRParser(object):
 
         # The time of the data retrieval
         self.utc = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
-        try:
-            # See if the the parser protocol has a scraper function
+
+        # See if the the parser protocol has a scraper function
+        if "scrape" in dir(self.proto):
             self.raw_data = self.proto.scrape(self.df, self.apikey)
             self.complex_scrape = True
-        except AttributeError:
-            # there exists no complex scrape so use a simple scrape
+        else:
             try:
                 self.raw_data = bsrputil.get_url(self.df['feedurl'] + self.apikey, self.df['bssid'])
                 #res = urllib2.urlopen( self.df['feedurl'] + self.apikey, timeout=self.timeout)
@@ -140,7 +146,7 @@ class BSRParser(object):
             self.parse()
 
         # self.clean_data contains
-        # [0] stnid, [1] lat, [2] lng, [3] docks, [4] bikes, [5] spaces, [6] name
+        # [0] stnid, [1] lat, [2] lng, [3] docks, [4] bikes, [5] spaces, [6] name, [7] active
         headings = {'id':0, 'lat':1, 'lng':2, 'docks':3, 'bikes':4, 'spaces':5, 'name':6, 'active':7}
         headingsa = ['id', 'lat', 'lng', 'docks', 'bikes', 'spaces', 'name', 'active'] # don't generate this using keys() - order is primordial!
 

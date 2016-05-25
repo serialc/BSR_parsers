@@ -1,5 +1,4 @@
 # Parser: Motivate (e.g., NYC, Chattanooga, Chicago, SF, Toronto)
-# Schema: llstatusname
 
 import json, re
 
