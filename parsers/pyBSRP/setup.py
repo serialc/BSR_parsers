@@ -9,5 +9,5 @@ setup(name='bsrp',
     license='MIT',
     packages=['bsrp'],
     package_data = { 'bsrp': [ 'protocols/*.py' ] },
-    install_requires=[ 'beautifulsoup4' ],
+    install_requires=[ 'beautifulsoup4', 'requests' ],
     zip_safe=False)

@@ -1,15 +1,17 @@
 # gbfs.py
 # Parser: General Bikeshare Feed Specification
 
-import json, re, urllib2
+import json, re, urllib2, requests
 from bsrp import bsrputil
 
 def scrape(df, apikey):
 
     # get the GBFS 'pointer' file that indicates paths to the key files
     try:
-        gbfs_index = urllib2.urlopen( df['feedurl'] )
-        gbfs_json = json.loads(gbfs_index.read())
+        gbfs_index = requests.get( df['feedurl'] )
+        gbfs_json = json.loads(gbfs_index.text)
+        #gbfs_index = urllib2.urlopen( df['feedurl'] )
+        #gbfs_json = json.loads(gbfs_index.read())
     except urllib2.URLError:
         print "Couldn't access GBFS feed for " + df['bssid'] + "."
         return False
@@ -36,16 +38,20 @@ def scrape(df, apikey):
 
     # Get the station information
     try:
-        information_req = bsrputil.get_url(station_information_url, df['bssid'])
-        information_json = json.loads(information_req)
+        information_req = requests.get(station_information_url, df['bssid'])
+        information_json = json.loads(information_req.text)
+        #information_req = bsrputil.get_url(station_information_url, df['bssid'])
+        #information_json = json.loads(information_req)
     except urllib2.URLError:
         print "Couldn't access station information for " + df['bssid'] + "."
         return False
 
     # Get the station statuses
     try:
-        status_req = bsrputil.get_url(station_status_url, df['bssid'])
-        status_json = json.loads(status_req)
+        status_req = requests.get(station_status_url, df['bssid'])
+        status_json = json.loads(status_req.text)
+        #status_req = bsrputil.get_url(station_status_url, df['bssid'])
+        #status_json = json.loads(status_req)
     except urllib2.URLError:
         print "Couldn't access station status for " + df['bssid'] + "."
         return False
