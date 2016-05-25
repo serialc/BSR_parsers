@@ -1,6 +1,7 @@
 # Parser: bcycle (e.g., Philadelphia, Indianapolis, Denver, Austin)
 
 import json, re
+from bs4 import BeautifulSoup
 
 def parse(df, data, utc):
     # df is a dict with the following keys:
@@ -44,21 +45,25 @@ def parse(df, data, utc):
                     stn_dict['lat'] = ll_match.group(1)
                     stn_dict['lng'] = ll_match.group(2)
             
-                # Example of string
-                # var marker = new createMarker(point, "<div class='markerTitle'><h3>Memorial Union</h3></div><div class='markerPublicText'><h5></h5></div><div class='markerAddress'>1401 Administrative Ave<br />Fargo, ND 58102</div><div class='markerAvail'><div style='float: left; width: 50%'><h3>1</h3>Bikes</div><div style='float: left; width: 50%'><h3>29</h3>Docks</div></div>", icon, back, false);
-                # Old matching
-                # attr_match = re.match("var marker = new createMarker\(point.+<div class='markerTitle'><h3>([^<]+)</h3></div>.+<strong>([0-9]*)</strong>.+<strong>([0-9]*)</strong>([0-9]*).+", line)
-                # New matching
-                attr_match = re.match("var marker = new createMarker\(point.+<div class='markerTitle'><h3>([^<]+)</h3></div>.+<h3>([0-9]*)</h3>.+<h3>([0-9]*)</h3>", line)
+                # Match the html containing name, bikes, spaces
+                xml_match = re.match("var marker = new createMarker\(point, \"(.+)\",", line)
 
-                if attr_match:
+                if xml_match:
+                    soup = BeautifulSoup(xml_match.group(1))
                     # we *should* have a full data set now, note there are no ids! id = 0
-                    name = attr_match.group(1)
-                    bikes = int(attr_match.group(2))
-                    spaces = int(attr_match.group(3))
+                    # determine type of syntax
+                    if len(soup.find_all('strong')) == 3:
+                        soupparts = soup.find_all('strong')
+                    else:
+                        soupparts = soup.find_all('h3')
+
+                    name = soupparts[0].string.encode('utf8')
+                    bikes = soupparts[1].string
+                    spaces = soupparts[2].string
+                    docks = str(int(bikes) + int(spaces))
 
                     # stnid, lat, lng, docks, bikes, spaces, name, active
-                    clean_stations_list.append([0, stn_dict['lat'], stn_dict['lng'], bikes + spaces, bikes, spaces, name, active_available])
+                    clean_stations_list.append([0, stn_dict['lat'], stn_dict['lng'], docks, bikes, spaces, name, active_available])
 
                     # reset
                     stn_dict['lat'] = -1
