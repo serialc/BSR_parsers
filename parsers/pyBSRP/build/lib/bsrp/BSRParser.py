@@ -1,4 +1,4 @@
-import os, imp, urllib2, json, imp
+import os, imp, urllib2, json, imp, sys
 from datetime import datetime
 from pyBSRP import bsrputil
 
@@ -17,7 +17,6 @@ class BSRParser(object):
             return
 
         # Load the appropriate parser module
-        print sys.modules['protocol']
         del sys.modules['protocol']
         self.proto = imp.load_source('protocol', os.path.dirname(os.path.abspath(__file__)) + '/protocols/' + bsr_feed['parsername'] + '.py')
         #self.proto = imp.load_source('protocol', '/protocols/' + bsr_feed['parsername'] + '.py')
