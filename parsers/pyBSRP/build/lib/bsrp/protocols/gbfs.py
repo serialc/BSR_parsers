@@ -2,14 +2,14 @@
 # Parser: General Bikeshare Feed Specification
 
 import json, re, urllib2
-from pyBSRP import bsrputil
+from bsrp import bsrputil
 
 def scrape(df, apikey):
 
     # get the GBFS 'pointer' file that indicates paths to the key files
     try:
         gbfs_index = bsrputil.get_url(df['feedurl'], df['bssid'])
-        if gbfs_index == "":
+        if not gbfs_index or gbfs_index == "":
             print "Failed to load the index file for " + df['bssid'] + "."
             return False
 
