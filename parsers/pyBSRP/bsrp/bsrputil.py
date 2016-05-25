@@ -34,7 +34,7 @@ def get_url(url, city, method="GET", post_data='', stn='', attempt=0, tries = -1
 
     # prep request
     stn_rq = urllib2.Request(url)
-    stn_rq.add_header('Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0')
+    stn_rq.add_header('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0')
 
     try:
         # make the retrieval call
