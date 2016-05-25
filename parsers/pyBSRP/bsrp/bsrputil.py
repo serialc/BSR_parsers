@@ -44,7 +44,7 @@ def get_url(url, city, method="GET", post_data='', stn='', attempt=0, tries = -1
             res = urllib2.urlopen( stn_rq, timeout=timeout_secs)
         
         # need to read here as it can throw errors
-        url_data = res.read().decode('utf-8')
+        url_data = res.read()
     except (urllib2.URLError, urllib2.HTTPError) as e:
         return False
     except socket.timeout as e:
