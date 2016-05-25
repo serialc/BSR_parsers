@@ -44,25 +44,25 @@ class BSRParser(object):
 
         # See if the the parser protocol has a scraper function
         if "scrape" in dir(self.proto):
+            print "Running custom scrape"
             self.raw_data = self.proto.scrape(self.df, self.apikey)
             self.complex_scrape = True
         else:
+            print "Generic scrape"
             try:
                 self.raw_data = bsrputil.get_url(self.df['feedurl'] + self.apikey, self.df['bssid'])
-                #res = urllib2.urlopen( self.df['feedurl'] + self.apikey, timeout=self.timeout)
-                #self.raw_data = res.read()
-                #if res.getcode() != 200:
-                #    print self.utc + ' ' + self.df['bssid'] + ' Request code=' + res.getcode() + '. Failed to retrieve url=' + self.df['feedurl']
-                #    return False
 
             except (urllib2.URLError, urllib2.HTTPError) as e:
                 print self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl']
                 return False
+            print self.utc + ' ' + self.df['bssid'] + ' Retrieved url=' + self.df['feedurl']
 
         # check data (self.raw_data)
         if self.raw_data == "" or self.raw_data == "False" or self.raw_data == False:
             print self.utc + ' ' + self.df['bssid'] + ' Retrieved url=' + self.df['feedurl'] + ' but contents are empty.'
             return False
+
+        print self.raw_data
 
         # Everything looks good
         return self
@@ -95,6 +95,7 @@ class BSRParser(object):
     def parse(self):
         if not self.raw_data:
             self.retrieve();
+
         self.clean_data = self.proto.parse(self.df, self.raw_data, self.utc)
 
         if not self.clean_data:
