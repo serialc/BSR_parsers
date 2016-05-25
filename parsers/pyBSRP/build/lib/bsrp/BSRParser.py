@@ -17,7 +17,11 @@ class BSRParser(object):
             return
 
         # Load the appropriate parser module
-        del sys.modules['protocol']
+        try:
+            del sys.modules['protocol']
+        except KeyError:
+            # module is not yet loaded
+            pass
         self.proto = imp.load_source('protocol', os.path.dirname(os.path.abspath(__file__)) + '/protocols/' + bsr_feed['parsername'] + '.py')
         #self.proto = imp.load_source('protocol', '/protocols/' + bsr_feed['parsername'] + '.py')
         self.df = bsr_feed
