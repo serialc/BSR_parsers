@@ -56,6 +56,9 @@ def parse(df, data, utc):
                         soupparts = soup.find_all('strong')
                     elif len(soup.find_all('h3')) == 3:
                         soupparts = soup.find_all('h3')
+                    elif len(soup.find_all('h3')) == 4:
+                        # Madison has trikes...
+                        soupparts = soup.find_all('h3')
                     else:
                         # something odd, skip
                         continue
