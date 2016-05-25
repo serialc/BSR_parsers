@@ -10,7 +10,7 @@ def parse(df, data, utc):
     # parse out desired info
     # does the file have valid content
     try:
-        json_data = json.loads(data, 'utf-8')
+        json_data = json.loads(unicode(data, 'iso-8859-1'))
     except ValueError:
         print utc + ' ' + df['bssid'] + " Parsing JSON failed for " + df['feedurl']
         return False
