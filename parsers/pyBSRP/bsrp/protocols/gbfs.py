@@ -9,6 +9,10 @@ def scrape(df, apikey):
     # get the GBFS 'pointer' file that indicates paths to the key files
     try:
         gbfs_index = bsrputil.get_url(df['feedurl'], df['bssid'])
+        if gbfs_index == "":
+            print "Failed to load the index file for " + df['bssid'] + "."
+            return False
+
         gbfs_json = json.loads(gbfs_index)
     except urllib2.URLError:
         print "Couldn't access GBFS feed for " + df['bssid'] + "."
