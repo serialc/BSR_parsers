@@ -21,6 +21,7 @@ print "The feed has " + str(len(feeds)) + " parts."
 
 for feed in feeds:
     if feed['parsername'] is not None:
+        print "Using parser: " + feed['parsername']
         parser = BSRParser(feed)
 
         if apikey is not '':
