@@ -28,7 +28,7 @@ for feed in feeds:
             parser.set_apikey(apikey)
 
         parser.retrieve()
-        parser.get_raw()
+        print parser.get_raw()
         parser.parse()
         print parser.get_string()
         break

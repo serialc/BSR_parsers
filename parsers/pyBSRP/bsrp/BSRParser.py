@@ -185,7 +185,18 @@ class BSRParser(object):
 
             output_string = u''
             for line in output_array:
-                output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
+                line_array = []
+                #output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
+                # parse out parts differently depending on type
+                for part in line:
+                    if type(part) == str:
+                        line_array.append(part)
+                    elif type(part) == unicode:
+                        line_array.append(str(part.encode('ascii', 'ignore')).decode('utf8'))
+                    else:
+                        line_array.append(str(part))
+                # recombine into string with separations defined by sep
+                output_string += sep.join(line_array) + "\n"
             return output_string
         else:
             print self.utc + " Unknown output type '" + return_type + "' requested."
