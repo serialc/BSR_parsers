@@ -64,16 +64,33 @@ def parse(df, data, utc):
     # [u'feedurl', u'feedname', u'bssid', u'format', u'feedurl2', u'keyreq', u'parsername', u'rid']
 
     clean_stations_dict = dict()
+    # Go through station information
     for stn in data['information']['data']['stations']:
         clean_stations_dict[stn['station_id']] = {'stnid': stn['station_id'], 'lat': stn['lat'], 'lon': stn['lon'], 'name': stn['name']}
         
+    # Go through station status and fill the clean_stations_dict with complementary status info
+    # Two possible bad outcomes a) No status for station, b) No station for status info
     for stn in data['status']['data']['stations']:
-        clean_stations_dict[stn['station_id']]['bikes'] = stn['num_bikes_available']
+        # Check if this status station exists in information list
+        try:
+            clean_stations_dict[stn['station_id']]['bikes'] = stn['num_bikes_available']
+        except KeyError:
+            print 'Station ' + stn['station_id'] + ' does not exist in station information data. Dropping it from list.'
+            continue
+
         clean_stations_dict[stn['station_id']]['docks'] = stn['num_docks_available']
         clean_stations_dict[stn['station_id']]['active'] = 'yes'
         if stn['is_installed'] == 0 or stn['is_renting'] == 0 or stn['is_returning'] == 0:
             clean_stations_dict[stn['station_id']]['active'] = 'no'
-    
+
+    # Check that each station has been filled with some status
+    for stn in clean_stations_dict.keys():
+        try:
+            clean_stations_dict[stn]['active']
+        except KeyError:
+            # That's fine we expect some to fail
+            clean_stations_dict.pop(stn)
+
     # capture clean results in clean_stations_list
     # stnid, lat, lng, docks, bikes, spaces, name, active
     clean_stations_list = []
