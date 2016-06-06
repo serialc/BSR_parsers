@@ -36,10 +36,10 @@ def parse(df, data, utc):
     clean_stations_list = []
     for stn_dict in stations_list:
         stnid = -1
-        if 'uaid' in stn_dict:
+        if 'uaid' in stn_dict and stn_dict['uaid'] != '':
         # try chattanooga style id
             stnid = stn_dict['uaid']
-        elif 'id' in stn_dict:
+        elif 'id' in stn_dict and stn_dict['id'] != '':
             # try
             stnid = stn_dict['id']
         else:
