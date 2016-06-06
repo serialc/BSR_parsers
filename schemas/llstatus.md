@@ -17,5 +17,5 @@ The string and file have the following characteristics:
 
 ### Other
 - Any station that is declared/determined to be out of service/down is omitted from results
-- In the situation where a BSS does not use id the field is left blank (while maintaining the tab spacing)
+- In the situation where a BSS does not use/have an id the field is left blank (while maintaining the tab spacing)
 - Number of docks, spaces and free docks are not always available - but two always are, we use these to reconstitute the third if necessary
