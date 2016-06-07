@@ -16,5 +16,5 @@ The string and file have the following characteristics:
 - Raw downloaded files, if requested, are prefixed with 'raw_'. E.g., "raw_boston_2015-10-31_13:26:52.txt"
 
 ### Other
-- In the situation where a BSS does not use/have an id the field is left blank (while maintaining the tab spacing)
+- In the situation where a BSS does not use/have an id the field should contain the lat and lng separated by an uncerscore. Example: 49.123456_-123.123456
 - Number of docks, spaces and free docks are not always available - but two always are, we use these to reconstitute the third.

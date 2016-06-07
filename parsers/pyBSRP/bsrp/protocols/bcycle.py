@@ -69,7 +69,7 @@ def parse(df, data, utc):
                     docks = str(int(bikes) + int(spaces))
 
                     # stnid, lat, lng, docks, bikes, spaces, name, active
-                    clean_stations_list.append(['', stn_dict['lat'], stn_dict['lng'], docks, bikes, spaces, name, active_available])
+                    clean_stations_list.append([stn_dict['lat'] + '_' + stn_dict['lng'], stn_dict['lat'], stn_dict['lng'], docks, bikes, spaces, name, active_available])
 
                     # reset
                     stn_dict['lat'] = -1
