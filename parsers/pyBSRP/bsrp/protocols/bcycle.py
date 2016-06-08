@@ -64,8 +64,8 @@ def parse(df, data, utc):
                         continue
 
                     name = soupparts[0].string.encode('utf8')
-                    bikes = soupparts[1].string
-                    spaces = soupparts[2].string
+                    bikes = str(soupparts[1].string)
+                    spaces = str(soupparts[2].string)
                     docks = str(int(bikes) + int(spaces))
 
                     # stnid, lat, lng, docks, bikes, spaces, name, active

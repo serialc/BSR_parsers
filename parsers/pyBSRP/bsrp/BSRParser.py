@@ -167,7 +167,7 @@ class BSRParser(object):
             elif schema == 'llstatus':
                 sep = '\t'
             else:
-                print self.utc + " Schema '" + schema + "' does not have a separator definition. BUG!"
+                print self.utc + " Schema '" + schema + "' does not have a separator definition."
                 return False
         # sep is defined
 
@@ -183,7 +183,7 @@ class BSRParser(object):
             # add headings according to schema
             output_array = [[ headingsa[i] for i in schema_indices ]] + output_array
 
-            output_string = u''
+            output_string = ''
             for line in output_array:
                 line_array = []
                 #output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
