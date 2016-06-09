@@ -17,7 +17,8 @@ except urllib2.URLError:
 
 feeds = json.loads(res.read())
 
-print "The feed has " + str(len(feeds)) + " parts."
+if len(feeds) > 1:
+    print "The feed has " + str(len(feeds)) + " parts."
 
 for feed in feeds:
     if feed['parsername'] is not None:
@@ -28,9 +29,21 @@ for feed in feeds:
             parser.set_apikey(apikey)
 
         parser.retrieve()
-        print parser.get_raw()
+        parser.get_raw()
         parser.parse()
         print parser.get_string()
+
+        # save
+        fh = open(sys.argv[1] + '_test_result_raw.txt', 'w')
+        fh.write(parser.get_raw())
+        fh.close()
+        print "Saved raw scraped data to " + sys.argv[1] + "_test_results_raw.txt"
+
+        fh = open(sys.argv[1] + '_test_result.txt', 'w')
+        fh.write(parser.schematize())
+        fh.close()
+        print "Saved cleaned and schematized output to " + sys.argv[1] + "_test_results.txt"
+
         break
     else:
         print "Feed has not defined parser assigned."

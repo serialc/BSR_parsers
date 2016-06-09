@@ -44,6 +44,9 @@ class BSRParser(object):
     def retrieve(self):
         """Retrieves the parsed contents of the data feed from the operator's server."""
 
+        if self.df['keyreq'] == 'yes' and self.apikey == '':
+            print "Gathering data for this BSS (" + self.df['bssid'] + ") and parser (" + self.df['parsername'] + ") requires a key according to BSR. None is provided. Trying anyways."
+
         # The time of the data retrieval
         self.utc = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
 
@@ -118,7 +121,7 @@ class BSRParser(object):
         fname = self.df['bssid'] + '_' + self.utc + '.txt'
         try:
             fh = open(path + fname, 'w')
-            fh.write(self.schematize(schema=schema, return_type='string').encode('utf-8'))
+            fh.write(self.schematize(schema=schema, return_type='string'))
             fh.close()
         except:
             print self.utc + " Failed to save file path: " + path + fname
@@ -167,7 +170,7 @@ class BSRParser(object):
             elif schema == 'llstatus':
                 sep = '\t'
             else:
-                print self.utc + " Schema '" + schema + "' does not have a separator definition. BUG!"
+                print self.utc + " Schema '" + schema + "' does not have a separator definition."
                 return False
         # sep is defined
 
@@ -183,7 +186,7 @@ class BSRParser(object):
             # add headings according to schema
             output_array = [[ headingsa[i] for i in schema_indices ]] + output_array
 
-            output_string = u''
+            output_string = ''
             for line in output_array:
                 line_array = []
                 #output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
@@ -197,6 +200,9 @@ class BSRParser(object):
                         line_array.append(str(part))
                 # recombine into string with separations defined by sep
                 output_string += sep.join(line_array) + "\n"
+            if type(output_string) == 'unicode':
+                return output_string.encode('utf-8')
+            # type str
             return output_string
         else:
             print self.utc + " Unknown output type '" + return_type + "' requested."
