@@ -29,19 +29,14 @@ for feed in feeds:
             parser.set_apikey(apikey)
 
         parser.retrieve()
-        parser.get_raw()
         parser.parse()
         print parser.get_string()
 
         # save
-        fh = open(sys.argv[1] + '_test_result_raw.txt', 'w')
-        fh.write(parser.get_raw())
-        fh.close()
+        parser.save_raw( "" )
         print "Saved raw scraped data to " + sys.argv[1] + "_test_results_raw.txt"
 
-        fh = open(sys.argv[1] + '_test_result.txt', 'w')
-        fh.write(parser.schematize())
-        fh.close()
+        parser.save( "" )
         print "Saved cleaned and schematized output to " + sys.argv[1] + "_test_results.txt"
 
         break

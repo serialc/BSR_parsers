@@ -86,10 +86,18 @@ class BSRParser(object):
         """Saves raw downloaded data into provided path. Filename will have format "[bssid] [UTC date time].txt". E.g., "boston_2015-10-31_13:26:52.txt" """
         if not self.raw_data:
             self.retrieve();
+
         try:
             fname = 'raw_' + self.df['bssid'] + '_' + self.utc + '.txt'
             fh = open(path + fname, 'w')
-            fh.write(self.raw_data)
+            # check type of raw_data
+            if isinstance(self.raw_data, basestring):
+                fh.write(self.raw_data)
+            elif isinstance(self.raw_data, dict):
+                fh.write(json.dumps(self.raw_data))
+            else:
+                # try this for other data types
+                fh.write(self.raw_data)
             fh.close()
         except:
             print self.utc + " Failed to save file path: " + path + fname
@@ -192,15 +200,17 @@ class BSRParser(object):
                 #output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
                 # parse out parts differently depending on type
                 for part in line:
-                    if type(part) == str:
+                    if isinstance(part, basestring):
                         line_array.append(part)
-                    elif type(part) == unicode:
+                    elif isinstance(part, unicode):
                         line_array.append(str(part.encode('ascii', 'ignore')).decode('utf8'))
                     else:
                         line_array.append(str(part))
                 # recombine into string with separations defined by sep
                 output_string += sep.join(line_array) + "\n"
-            if type(output_string) == 'unicode':
+
+            # return the string in correct format
+            if isinstance(output_string, unicode):
                 return output_string.encode('utf-8')
             # type str
             return output_string
