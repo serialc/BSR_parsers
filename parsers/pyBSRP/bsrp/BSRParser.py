@@ -56,7 +56,7 @@ class BSRParser(object):
             self.complex_scrape = True
         else:
             try:
-                self.raw_data = bsrputil.get_url(self.df['feedurl'] + self.apikey, self.df['bssid'])
+                self.raw_data = bsrputil.get_url(self.df['feedurl'] + self.apikey, self.df['bssid'], timeout=30)
 
             except (urllib2.URLError, urllib2.HTTPError) as e:
                 print self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl']
