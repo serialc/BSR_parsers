@@ -90,11 +90,14 @@ class BSRParser(object):
         try:
             fname = 'raw_' + self.df['bssid'] + '_' + self.utc + '.txt'
             fh = open(path + fname, 'w')
+
             # check type of raw_data
-            if isinstance(self.raw_data, basestring):
-                fh.write(self.raw_data)
+            if isinstance(self.raw_data, unicode):
+                fh.write(self.raw_data.encode('utf-8'))
             elif isinstance(self.raw_data, dict):
                 fh.write(json.dumps(self.raw_data))
+            elif isinstance(self.raw_data, basestring):
+                fh.write(self.raw_data)
             else:
                 # try this for other data types
                 fh.write(self.raw_data)

@@ -41,4 +41,4 @@ for feed in feeds:
 
         break
     else:
-        print "Feed has not defined parser assigned."
+        print "Feed " + feed['feedname'] + " does not have a parser assigned."
