@@ -1,4 +1,4 @@
-import os, imp, urllib2, json, imp, sys
+import os, imp, requests, json, imp, sys
 from datetime import datetime
 from pyBSRP import bsrputil
 
@@ -55,10 +55,10 @@ class BSRParser(object):
             self.raw_data = self.proto.scrape(self.df, self.apikey)
             self.complex_scrape = True
         else:
-            try:
-                self.raw_data = bsrputil.get_url(self.df['feedurl'] + self.apikey, self.df['bssid'], timeout=30)
-
-            except (urllib2.URLError, urllib2.HTTPError) as e:
+            r = requests.get( self.df['feedurl'] )
+            if r.status_code == 200:
+                self.raw_data = r.text
+            else:
                 print self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl']
                 return False
 
@@ -90,11 +90,14 @@ class BSRParser(object):
         try:
             fname = 'raw_' + self.df['bssid'] + '_' + self.utc + '.txt'
             fh = open(path + fname, 'w')
+
             # check type of raw_data
-            if isinstance(self.raw_data, basestring):
-                fh.write(self.raw_data)
+            if isinstance(self.raw_data, unicode):
+                fh.write(self.raw_data.encode('utf-8'))
             elif isinstance(self.raw_data, dict):
                 fh.write(json.dumps(self.raw_data))
+            elif isinstance(self.raw_data, str):
+                fh.write(self.raw_data)
             else:
                 # try this for other data types
                 fh.write(self.raw_data)
@@ -200,10 +203,10 @@ class BSRParser(object):
                 #output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
                 # parse out parts differently depending on type
                 for part in line:
-                    if isinstance(part, basestring):
+                    if isinstance(part, unicode):
+                        line_array.append(str(part.encode('utf8')))
+                    elif isinstance(part, str):
                         line_array.append(part)
-                    elif isinstance(part, unicode):
-                        line_array.append(str(part.encode('ascii', 'ignore')).decode('utf8'))
                     else:
                         line_array.append(str(part))
                 # recombine into string with separations defined by sep
