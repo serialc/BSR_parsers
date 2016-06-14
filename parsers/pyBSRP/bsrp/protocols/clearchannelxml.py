@@ -38,6 +38,14 @@ def parse(df, data, utc):
         # get lat/long
         ll = station.find('coordinates').string.split(',')
 
+        # shorten lat/lng
+        lat = ll[1]
+        lng = ll[0]
+        if (len(lat) - lat.rfind('.')) > 7:
+            lat = lat[0:(lat.rfind('.') + 7)]
+        if (len(lng) - lng.rfind('.')) > 7:
+            lng = lng[0:(lng.rfind('.') + 7)]
+
         # total number of docks
         if res_bs.group(1) == "" or res_bs.group(2) == "":
             # something weird, skip
@@ -47,7 +55,7 @@ def parse(df, data, utc):
         docks = int(res_bs.group(1)) + int(res_bs.group(2))
 
         # we want stnid, lat, lng, docks, bikes, spaces, name, active
-        clean_stations_list.append([id, ll[1], ll[0], str(docks), res_bs.group(1), res_bs.group(2), res_name.group(1).decode('utf-8'), 'yes'])
+        clean_stations_list.append([id, lat, lng, str(docks), res_bs.group(1), res_bs.group(2), res_name.group(1).decode('utf-8'), 'yes'])
 
     # check if we have some data
     if len(clean_stations_list) == 0:

@@ -96,7 +96,7 @@ class BSRParser(object):
                 fh.write(self.raw_data.encode('utf-8'))
             elif isinstance(self.raw_data, dict):
                 fh.write(json.dumps(self.raw_data))
-            elif isinstance(self.raw_data, basestring):
+            elif isinstance(self.raw_data, str):
                 fh.write(self.raw_data)
             else:
                 # try this for other data types
@@ -203,10 +203,10 @@ class BSRParser(object):
                 #output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
                 # parse out parts differently depending on type
                 for part in line:
-                    if isinstance(part, basestring):
+                    if isinstance(part, unicode):
+                        line_array.append(str(part.encode('utf8')))
+                    elif isinstance(part, str):
                         line_array.append(part)
-                    elif isinstance(part, unicode):
-                        line_array.append(str(part.encode('ascii', 'ignore')).decode('utf8'))
                     else:
                         line_array.append(str(part))
                 # recombine into string with separations defined by sep

@@ -17,6 +17,8 @@ except urllib2.URLError:
 
 feeds = json.loads(res.read())
 
+if len(feeds) == 0:
+    print "No feed is specified for this BSS."
 if len(feeds) > 1:
     print "The feed has " + str(len(feeds)) + " parts."
 
