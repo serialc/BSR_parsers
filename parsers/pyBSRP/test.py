@@ -6,12 +6,14 @@ if len(sys.argv) < 2:
     print "Usage python test.py [bssid] [apikey]\nExamples:\npython test.py boston\npython test.py paris MYSECRETAPIKEY123456"
     exit
 
+bssid = sys.argv[1]
+
 apikey = ''
 if len(sys.argv) == 3:
     apikey = sys.argv[2]
 
 try:
-    res = urllib2.urlopen("http://bikeshare-research.org/api/v1/categories/data/systems/" + sys.argv[1])
+    res = urllib2.urlopen("http://bikeshare-research.org/api/v1/categories/data/systems/" + bssid)
 except urllib2.URLError:
     print "Couldn't retrieve the URL due to either a) Incorrect bssid, or b) Can't establish connection to server."
 
@@ -28,6 +30,7 @@ for feed in feeds:
         parser = BSRParser(feed)
 
         if apikey is not '':
+            print apikey
             parser.set_apikey(apikey)
 
         parser.retrieve()
@@ -36,10 +39,10 @@ for feed in feeds:
 
         # save
         parser.save_raw( "" )
-        print "Saved raw scraped data to " + sys.argv[1] + "_test_results_raw.txt"
+        print "Saved raw scraped data to " + bssid + "_test_results_raw.txt"
 
         parser.save( "" )
-        print "Saved cleaned and schematized output to " + sys.argv[1] + "_test_results.txt"
+        print "Saved cleaned and schematized output to " + bssid + "_test_results.txt"
 
         break
     else:

@@ -55,7 +55,9 @@ class BSRParser(object):
             self.raw_data = self.proto.scrape(self.df, self.apikey)
             self.complex_scrape = True
         else:
-            r = requests.get( self.df['feedurl'] )
+            # Add apikey to end of request - at worst it's empty
+            r = requests.get( self.df['feedurl'] + self.apikey)
+
             if r.status_code == 200:
                 self.raw_data = r.text
             else:
