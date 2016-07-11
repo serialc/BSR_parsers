@@ -55,12 +55,21 @@ class BSRParser(object):
             self.raw_data = self.proto.scrape(self.df, self.apikey)
             self.complex_scrape = True
         else:
+
             # Add apikey to end of request - at worst it's empty
-            r = requests.get( self.df['feedurl'] + self.apikey)
+            headers = {'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:48.0) Gecko/20100101 Firefox/48.0',
+                    'accept-encoding':'gzip, deflate, br',
+                    'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'cache-control':'no-cache',
+                    'accept-language':'en-US,en;q=0.5'
+                    }
+
+            r = requests.get( self.df['feedurl'] + self.apikey, headers=headers)
 
             if r.status_code == 200:
                 self.raw_data = r.text
             else:
+                print r.status_code, r.headers['content-type'], r.encoding, r.content
                 print self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl']
                 return False
 
