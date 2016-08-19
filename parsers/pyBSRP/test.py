@@ -38,8 +38,9 @@ for feed in feeds:
         print parser.get_string()
 
         # save
-        parser.save_raw( "" )
-        print "Saved raw scraped data to " + bssid + "_test_results_raw.txt"
+        if isinstance( parser.get_raw(), basestring ):
+            parser.save_raw( "" )
+            print "Saved raw scraped data to " + bssid + "_test_results_raw.txt"
 
         parser.save( "" )
         print "Saved cleaned and schematized output to " + bssid + "_test_results.txt"

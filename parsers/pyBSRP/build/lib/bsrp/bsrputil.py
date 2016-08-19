@@ -1,7 +1,7 @@
 # BSRP utilities that simplify individual protocols
 
 from datetime import datetime
-import os, urllib2, time, stat, socket, pytz
+import os, urllib2, time, stat, socket#, pytz
 
 def robust_url_retrieval(parameters, method='GET', post_data='', stn='', tries=5, timeout=20):
     bssid = parameters['city']

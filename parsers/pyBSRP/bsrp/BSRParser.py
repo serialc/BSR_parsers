@@ -1,6 +1,6 @@
 import os, imp, requests, json, imp, sys
 from datetime import datetime
-from pyBSRP import bsrputil
+from bsrp import bsrputil
 
 class BSRParser(object):
     """ Class for the retrieving data from BSS data feeds.

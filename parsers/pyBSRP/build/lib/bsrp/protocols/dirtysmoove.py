@@ -10,6 +10,7 @@ def parse(df, data, utc):
     data = data.split("\n")
 
     clean_stations_list = []
+    antidupedict = dict()
 
     # parse line by line
     for line in data:
@@ -31,6 +32,11 @@ def parse(df, data, utc):
                     stnid = marker['title'].split(' ')[0]
                     name = ' '.join(marker['title'].split(' ')[1:])
                     docks = str(int(marker['avl_bikes']) + int(marker['free_slots']))
+
+                    if stnid in antidupedict:
+                        continue
+                    else:
+                        antidupedict[stnid] = True
                     
                     # stnid, lat, lng, docks, bikes, spaces, name, active
                     clean_stations_list.append([stnid, marker['latitude'], marker['longitude'], docks, marker['avl_bikes'], marker['free_slots'], name, 'yes'])
