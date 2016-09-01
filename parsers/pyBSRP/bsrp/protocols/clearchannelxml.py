@@ -49,7 +49,6 @@ def parse(df, data, utc):
         # total number of docks
         if res_bs.group(1) == "" or res_bs.group(2) == "":
             # something weird, skip
-            print station
             continue
 
         docks = int(res_bs.group(1)) + int(res_bs.group(2))
