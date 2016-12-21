@@ -35,15 +35,22 @@ for feed in feeds:
 
         parser.retrieve()
         parser.parse()
-        print parser.get_string()
+        stns = parser.get_data_array()
+        # test reuse of stations
+        if stns:
+            # stns is not equal to false
+            for stn in stns:
+                print stn
 
-        # save
-        if isinstance( parser.get_raw(), basestring ):
-            parser.save_raw( "" )
-            print "Saved raw scraped data to " + bssid + "_test_results_raw.txt"
+            print parser.get_string()
 
-        parser.save( "" )
-        print "Saved cleaned and schematized output to " + bssid + "_test_results.txt"
+            # save
+            if isinstance( parser.get_raw(), basestring ):
+                parser.save_raw( "" )
+                print "Saved raw scraped data to " + bssid + "_test_results_raw.txt"
+
+            parser.save( "" )
+            print "Saved cleaned and schematized output to " + bssid + "_test_results.txt"
 
         break
     else:
