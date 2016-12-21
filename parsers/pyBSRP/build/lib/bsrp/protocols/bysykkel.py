@@ -41,7 +41,7 @@ def parse(df, data, utc):
         try:
             clean_stations_dict[stn['id']]['bikes'] = stn['availability']['bikes']
         except KeyError:
-            print 'Station ' + str(stn['id']) + ' does not exist in station information data. Dropping it from list.'
+            #print 'Station ' + str(stn['id']) + ' does not exist in station information data. Dropping it from list.'
             continue
 
         clean_stations_dict[stn['id']]['docks'] = stn['availability']['locks']
