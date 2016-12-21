@@ -168,7 +168,9 @@ class BSRParser(object):
 
     def schematize(self, schema='fullset', return_type='string', sep=''):
         """Returns the data in schematized format, array or string"""
-        if not self.clean_data:
+
+        # Check that we have data to schematize
+        if self.clean_data == "" or not self.clean_data:
             self.parse()
             if not self.clean_data:
                 print self.utc + " Unable to retrieve data so abandoning schematization."
