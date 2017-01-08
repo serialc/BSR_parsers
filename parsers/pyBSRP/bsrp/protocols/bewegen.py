@@ -18,17 +18,17 @@ def parse(df, data, utc):
     clean_stations_list = []
     for stn in json_data:
 
-        soup = BeautifulSoup(stn.popup)
+        soup = BeautifulSoup(stn['popup'])
         b = soup.find_all('b')
         bikes = int(b[0].string)
         docks = int(b[1].string)
 
-        if stn.station_type == "FIXED":
+        if stn['station_type'] == "FIXED":
             active = 'yes'
         else:
             active = 'no'
         
-        clean_stations_list.append([stn.number.split(' ')[1], stn.location[0], stn.location[1], str(bikes + spaces), bikes, spaces, stn.name, active])
+        clean_stations_list.append([stn['number'].split(' ')[1], stn['location'][0], stn['location'][1], str(bikes + spaces), bikes, spaces, stn['name'], active])
 
     # check if we have some data
     if len(clean_stations_list) == 0:
