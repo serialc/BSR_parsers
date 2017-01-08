@@ -23,7 +23,7 @@ def parse(df, data, utc):
         bikes = int(b[0].string)
         spaces = int(b[1].string)
 
-        if stn['station_type'] == "FIXED":
+        if stn['type'] == "OPEN":
             active = 'yes'
         else:
             active = 'no'
