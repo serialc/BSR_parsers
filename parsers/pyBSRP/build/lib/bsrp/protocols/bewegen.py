@@ -21,7 +21,7 @@ def parse(df, data, utc):
         soup = BeautifulSoup(stn['popup'])
         b = soup.find_all('b')
         bikes = int(b[0].string)
-        docks = int(b[1].string)
+        spaces = int(b[1].string)
 
         if stn['station_type'] == "FIXED":
             active = 'yes'
