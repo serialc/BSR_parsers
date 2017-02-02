@@ -46,13 +46,13 @@ def get_url(url, city, method="GET", post_data='', stn='', attempt=0, tries = -1
         # need to read here as it can throw errors
         url_data = res.read()
     except (urllib2.URLError, urllib2.HTTPError) as e:
-        print "Failed to retrieve url: " + url
+        print("Failed to retrieve url: " + url)
         return False
     except socket.timeout as e:
         if tries == -1 or tries == attempt:
-            print "Station retrieval for " + city + " failed. Urlopen request timed out. Giving up.\n"
+            print("Station retrieval for " + city + " failed. Urlopen request timed out. Giving up.\n")
         else:
-            print "Station retrieval for " + city + " failed. Urlopen request timed out. Will try again.\n"
+            print("Station retrieval for " + city + " failed. Urlopen request timed out. Will try again.\n")
 
         # failed, return False
         return False
@@ -67,7 +67,7 @@ def get_url(url, city, method="GET", post_data='', stn='', attempt=0, tries = -1
             "url: " + str(res.geturl()) + "\n" + \
             "info: " + str(res.info()) + "\n" + \
             "contents: " + url_data + "\n"
-            print message
+            print( message )
         
         # retrieval failed!
         return False

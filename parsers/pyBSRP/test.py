@@ -3,7 +3,7 @@ import sys, urllib2, json
 
 # Check a bssid is passed otherwise help
 if len(sys.argv) < 2:
-    print "Usage python test.py [bssid] [apikey]\nExamples:\npython test.py boston\npython test.py paris MYSECRETAPIKEY123456"
+    print("Usage python test.py [bssid] [apikey]\nExamples:\npython test.py boston\npython test.py paris MYSECRETAPIKEY123456")
     exit
 
 bssid = sys.argv[1]
@@ -15,22 +15,22 @@ if len(sys.argv) == 3:
 try:
     res = urllib2.urlopen("http://bikeshare-research.org/api/v1/categories/data/systems/" + bssid)
 except urllib2.URLError:
-    print "Couldn't retrieve the URL due to either a) Incorrect bssid, or b) Can't establish connection to server."
+    print("Couldn't retrieve the URL due to either a) Incorrect bssid, or b) Can't establish connection to server.")
 
 feeds = json.loads(res.read())
 
 if len(feeds) == 0:
-    print "No feed is specified for this BSS."
+    print("No feed is specified for this BSS.")
 if len(feeds) > 1:
-    print "The feed has " + str(len(feeds)) + " parts."
+    print("The feed has " + str(len(feeds)) + " parts.")
 
 for feed in feeds:
     if feed['parsername'] is not None:
-        print "Using parser: " + feed['parsername']
+        print("Using parser: " + feed['parsername'])
         parser = BSRParser(feed)
 
         if apikey is not '':
-            print apikey
+            print(apikey)
             parser.set_apikey(apikey)
 
         parser.retrieve()
@@ -40,18 +40,18 @@ for feed in feeds:
         if stns:
             # stns is not equal to false
             for stn in stns:
-                print stn
+                print(stn)
 
-            print parser.get_string()
+            print(parser.get_string())
 
             # save
             if isinstance( parser.get_raw(), basestring ):
                 parser.save_raw( "" )
-                print "Saved raw scraped data to " + bssid + "_test_results_raw.txt"
+                print("Saved raw scraped data to " + bssid + "_test_results_raw.txt")
 
             parser.save( "" )
-            print "Saved cleaned and schematized output to " + bssid + "_test_results.txt"
+            print("Saved cleaned and schematized output to " + bssid + "_test_results.txt")
 
         break
     else:
-        print "Feed " + feed['feedname'] + " does not have a parser assigned."
+        print("Feed " + feed['feedname'] + " does not have a parser assigned.")
