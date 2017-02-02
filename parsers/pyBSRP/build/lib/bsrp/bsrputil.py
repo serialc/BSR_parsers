@@ -1,7 +1,7 @@
 # BSRP utilities that simplify individual protocols
 
 from datetime import datetime
-import os, urllib2, time, stat, socket#, pytz
+import os, requests, time, stat, socket#, pytz
 
 def robust_url_retrieval(parameters, method='GET', post_data='', stn='', tries=5, timeout=20):
     bssid = parameters['city']
@@ -33,41 +33,35 @@ def robust_url_retrieval(parameters, method='GET', post_data='', stn='', tries=5
 def get_url(url, city, method="GET", post_data='', stn='', attempt=0, tries = -1, timeout_secs=20):
 
     # prep request
-    stn_rq = urllib2.Request(url)
-    stn_rq.add_header('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0')
+    headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:47.0) Gecko/20100101 Firefox/47.0'}
 
     try:
         # make the retrieval call
         if method == "POST":
-            res = urllib2.urlopen( stn_rq, data=post_data, timeout=timeout_secs)
+            res = requests.post(url, headers=headers, data=post_data, timeout=timeout_secs)
         if method == "GET":
-            res = urllib2.urlopen( stn_rq, timeout=timeout_secs)
+            res = requests.get(url, headers=headers, timeout=timeout_secs)
         
         # need to read here as it can throw errors
-        url_data = res.read()
-    except (urllib2.URLError, urllib2.HTTPError) as e:
-        print "Failed to retrieve url: " + url
-        return False
-    except socket.timeout as e:
-        if tries == -1 or tries == attempt:
-            print "Station retrieval for " + city + " failed. Urlopen request timed out. Giving up.\n"
-        else:
-            print "Station retrieval for " + city + " failed. Urlopen request timed out. Will try again.\n"
+        url_data = res.text
 
+        # raise error if one exists
+        res.raise_for_status()
+    except (urllib3.URLError, urllib3.HTTPError) as e:
+        print("Station retrieval for " + city + " failed to retrieve url: " + url)
         # failed, return False
         return False
 
-    if url_data == "" or url_data == "False" or res.getcode() != 200:
+    if url_data == "" or url_data == "False" or res.status_code != 200:
         # only print message if tries == -1 or tries == 5
         if tries == -1 or tries == attempt:
             # only print message if this is the last attempt, or not a 'robust' retrieval
             message = "Downloaded data for [" + city + "] during snapshot [" + date_time + "] but it is empty.\n DEBUG INFO\n" + \
-            "code: " + str(res.getcode()) + " " + \
-            "data: " + str(res.read()) + "\n" + \
-            "url: " + str(res.geturl()) + "\n" + \
-            "info: " + str(res.info()) + "\n" + \
-            "contents: " + url_data + "\n"
-            print message
+                "code: " + str(res.status_code) + " " + \
+                "data: " + str(res.text) + "\n" + \
+                "url: " + url + "\n" + \
+                "contents: " + url_data + "\n"
+            print( message )
         
         # retrieval failed!
         return False

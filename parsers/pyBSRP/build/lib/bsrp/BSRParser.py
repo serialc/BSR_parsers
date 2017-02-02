@@ -13,7 +13,7 @@ class BSRParser(object):
 
         # Check if a parser module is set in feed
         if bsr_feed['parsername'] is None:
-            print "This feed has no designated parser set. Update on BSR and try again."
+            print("This feed has no designated parser set. Update on BSR and try again.")
             return
 
         # Load the appropriate parser module
@@ -45,7 +45,7 @@ class BSRParser(object):
         """Retrieves the parsed contents of the data feed from the operator's server."""
 
         if self.df['keyreq'] == 'yes' and self.apikey == '':
-            print "Gathering data for this BSS (" + self.df['bssid'] + ") and parser (" + self.df['parsername'] + ") requires a key according to BSR. None is provided. Trying anyways."
+            print("Gathering data for this BSS (" + self.df['bssid'] + ") and parser (" + self.df['parsername'] + ") requires a key according to BSR. None is provided. Trying anyways.")
 
         # The time of the data retrieval
         self.utc = datetime.utcnow().strftime('%Y-%m-%d_%H-%M-%S')
@@ -69,13 +69,13 @@ class BSRParser(object):
             if r.status_code == 200:
                 self.raw_data = r.text
             else:
-                print r.status_code, r.headers['content-type'], r.encoding, r.content
-                print self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl']
+                print(r.status_code, r.headers['content-type'], r.encoding, r.content)
+                print(self.utc + ' ' + self.df['bssid'] + ' Failed to retrieve url=' + self.df['feedurl'])
                 return False
 
         # check data (self.raw_data)
         if self.raw_data == "" or self.raw_data == "False" or self.raw_data == False:
-            print self.utc + ' ' + self.df['bssid'] + ' Retrieved url=' + self.df['feedurl'] + ' but contents are empty.'
+            print(self.utc + ' ' + self.df['bssid'] + ' Retrieved url=' + self.df['feedurl'] + ' but contents are empty.')
             return False
 
         # Everything looks good
@@ -103,18 +103,14 @@ class BSRParser(object):
             fh = open(path + fname, 'w')
 
             # check type of raw_data
-            if isinstance(self.raw_data, unicode):
-                fh.write(self.raw_data.encode('utf-8'))
-            elif isinstance(self.raw_data, dict):
+            if isinstance(self.raw_data, dict):
                 fh.write(json.dumps(self.raw_data))
-            elif isinstance(self.raw_data, str):
-                fh.write(self.raw_data)
             else:
                 # try this for other data types
                 fh.write(self.raw_data)
             fh.close()
         except:
-            print self.utc + " Failed to save file path: " + path + fname
+            print(self.utc + " Failed to save file path: " + path + fname)
         return self
 
     def parse(self):
@@ -124,7 +120,7 @@ class BSRParser(object):
         self.clean_data = self.proto.parse(self.df, self.raw_data, self.utc)
 
         if not self.clean_data:
-            print self.utc + " Failed to clean data."
+            print(self.utc + " Failed to clean data.")
             return False
         return self
 
@@ -146,7 +142,7 @@ class BSRParser(object):
             fh.write(self.schematize(schema=schema, return_type='string'))
             fh.close()
         except:
-            print self.utc + " Failed to save file path: " + path + fname
+            print(self.utc + " Failed to save file path: " + path + fname)
             return False
         return self
 
@@ -173,7 +169,7 @@ class BSRParser(object):
         if not self.clean_data:
             self.parse()
             if not self.clean_data:
-                print self.utc + " Unable to retrieve data so abandoning schematization."
+                print(self.utc + " Unable to retrieve data so abandoning schematization.")
                 return False
 
         # self.clean_data contains
@@ -187,7 +183,7 @@ class BSRParser(object):
         elif schema == 'llstatus':
             schema_indices = [0, 1, 2, 4, 5]
         else:
-            print self.utc + " Requested schema '" + schema + "' not found."
+            print(self.utc + " Requested schema '" + schema + "' not found.")
             return False
 
         # DEFINE separator according to schema but allow overide
@@ -197,7 +193,7 @@ class BSRParser(object):
             elif schema == 'llstatus':
                 sep = '\t'
             else:
-                print self.utc + " Schema '" + schema + "' does not have a separator definition."
+                print(self.utc + " Schema '" + schema + "' does not have a separator definition.")
                 return False
         # sep is defined
 
@@ -216,23 +212,14 @@ class BSRParser(object):
             output_string = ''
             for line in output_array:
                 line_array = []
-                #output_string += sep.join(str(part).decode('utf8') for part in line) + "\n"
                 # parse out parts differently depending on type
                 for part in line:
-                    if isinstance(part, unicode):
-                        line_array.append(str(part.encode('utf8')))
-                    elif isinstance(part, str):
-                        line_array.append(part)
-                    else:
-                        line_array.append(str(part))
+                    line_array.append(str(part))
                 # recombine into string with separations defined by sep
                 output_string += sep.join(line_array) + "\n"
 
-            # return the string in correct format
-            if isinstance(output_string, unicode):
-                return output_string.encode('utf-8')
             # type str
             return output_string
         else:
-            print self.utc + " Unknown output type '" + return_type + "' requested."
+            print(self.utc + " Unknown output type '" + return_type + "' requested.")
             return False

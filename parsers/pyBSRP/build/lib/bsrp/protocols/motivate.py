@@ -9,19 +9,19 @@ def parse(df, data, utc):
     # parse out desired info
     # does the file have valid content
     if re.match('false', data) or re.match("\"\"(\s)+\n?", data) or re.match('[\s\"]*<html><head><title>Apache Tomcat', data):
-        print utc + ' ' + df['bssid'] + " Parser found file to be empty of valid content."
+        print(utc + ' ' + df['bssid'] + " Parser found file to be empty of valid content.")
         return False
 
     # parse json data
     try:
         data_json = json.loads(data)
     except ValueError:
-        print utc + ' ' + df['bssid'] + " Parsing JSON failed for " + df['feedurl']
+        print(utc + ' ' + df['bssid'] + " Parsing JSON failed for " + df['feedurl'])
         return False
     
     # check if we retreived the station list
     if not data_json.has_key('stationBeanList'):
-        print utc + ' ' + df['bssid'] + " Data does not contain 'stationBeanList' element'. No data found."
+        print(utc + ' ' + df['bssid'] + " Data does not contain 'stationBeanList' element'. No data found.")
         return False
     
     # open the stationBeanList now that we know it exists
@@ -29,7 +29,7 @@ def parse(df, data, utc):
 
     # check for the size of stationBeanList
     if len(stations_list) <= 1:
-        print utc + ' ' + df['bssid'] + " Data does not contain 'stationBeanList' element'. No data found."
+        print(utc + ' ' + df['bssid'] + " Data does not contain 'stationBeanList' element'. No data found.")
         return False
 
     # capture clean results in clean_stations_list
@@ -43,7 +43,7 @@ def parse(df, data, utc):
             # try
             stnid = stn_dict['id']
         else:
-            print utc + ' ' + df['bssid'] + " Parser did not find valid id/uaid in for line: " + str(stn_dict)
+            print(utc + ' ' + df['bssid'] + " Parser did not find valid id/uaid in for line: " + str(stn_dict))
             return False
 
         # build the list of valid data
@@ -61,7 +61,7 @@ def parse(df, data, utc):
 
     # check if we have some data
     if len(clean_stations_list) == 0:
-        print utc + ' ' + df['bssid'] + " Parser did not find any station's data."
+        print(utc + ' ' + df['bssid'] + " Parser did not find any station's data.")
         return False
 
     return clean_stations_list

@@ -11,7 +11,7 @@ def scrape(df, apikey):
         info_req = requests.get( df['feedurl'] )
         info_json = json.loads(info_req.text)
     except urllib2.URLError:
-        print "Couldn't access info feed for " + df['bssid'] + "."
+        print("Couldn't access info feed for " + df['bssid'] + ".")
         return False
 
     # Get the station statuses
@@ -19,7 +19,7 @@ def scrape(df, apikey):
         status_req = requests.get( df['feedurl2'] )
         status_json = json.loads(status_req.text)
     except urllib2.URLError:
-        print "Couldn't access station status for " + df['bssid'] + "."
+        print("Couldn't access station status for " + df['bssid'] + ".")
         return False
 
     # Return both parts
@@ -64,7 +64,7 @@ def parse(df, data, utc):
 
     # check if we have some data
     if len(clean_stations_list) == 0:
-        print utc + ' ' + df['bssid'] + " Parser did not find any station's data."
+        print(utc + ' ' + df['bssid'] + " Parser did not find any station's data.")
         return False
 
     return clean_stations_list

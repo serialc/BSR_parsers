@@ -1,5 +1,5 @@
 from bsrp import BSRParser
-import sys, urllib2, json
+import sys, requests, json
 
 # Check a bssid is passed otherwise help
 if len(sys.argv) < 2:
@@ -13,11 +13,14 @@ if len(sys.argv) == 3:
     apikey = sys.argv[2]
 
 try:
-    res = urllib2.urlopen("http://bikeshare-research.org/api/v1/categories/data/systems/" + bssid)
-except urllib2.URLError:
+    res = requests.get("http://bikeshare-research.org/api/v1/categories/data/systems/" + bssid)
+
+    # raise error if one exists
+    res.raise_for_status()
+except urllib3.URLError:
     print("Couldn't retrieve the URL due to either a) Incorrect bssid, or b) Can't establish connection to server.")
 
-feeds = json.loads(res.read())
+feeds = json.loads(res.text)
 
 if len(feeds) == 0:
     print("No feed is specified for this BSS.")
@@ -44,11 +47,12 @@ for feed in feeds:
 
             print(parser.get_string())
 
-            # save
-            if isinstance( parser.get_raw(), basestring ):
+            # save raw
+            if isinstance(parser.get_raw(), str):
                 parser.save_raw( "" )
                 print("Saved raw scraped data to " + bssid + "_test_results_raw.txt")
 
+            # save cleaned
             parser.save( "" )
             print("Saved cleaned and schematized output to " + bssid + "_test_results.txt")
 

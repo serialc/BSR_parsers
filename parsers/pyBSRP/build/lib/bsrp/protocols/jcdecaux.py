@@ -12,7 +12,7 @@ def parse(df, data, utc):
     try:
         json_data = json.loads(data)
     except ValueError:
-        print utc + ' ' + df['bssid'] + " Parsing JSON failed for " + df['feedurl']
+        print(utc + ' ' + df['bssid'] + " Parsing JSON failed for " + df['feedurl'])
         return False
 
     # capture clean results in clean_stations_list
@@ -23,7 +23,7 @@ def parse(df, data, utc):
 
     # check if we have some data
     if len(clean_stations_list) == 0:
-        print utc + ' ' + df['bssid'] + " Parser did not find any station's data."
+        print(utc + ' ' + df['bssid'] + " Parser did not find any station's data.")
         return False
     
     return clean_stations_list

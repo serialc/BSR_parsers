@@ -27,7 +27,7 @@ def parse(df, data, utc):
 
     # check if we have some data
     if len(clean_stations_list) == 0:
-        print utc + ' ' + df['bssid'] + " Parser did not find any station's data."
+        print(utc + ' ' + df['bssid'] + " Parser did not find any station's data.")
         return False
 
     return clean_stations_list

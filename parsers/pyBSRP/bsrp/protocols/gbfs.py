@@ -1,7 +1,7 @@
 # gbfs.py
 # Parser: General Bikeshare Feed Specification
 
-import json, re, urllib2, requests
+import json, re, requests
 from bsrp import bsrputil
 
 def scrape(df, apikey):
@@ -10,10 +10,12 @@ def scrape(df, apikey):
     try:
         gbfs_index = requests.get( df['feedurl'] )
         gbfs_json = json.loads(gbfs_index.text)
-        #gbfs_index = urllib2.urlopen( df['feedurl'] )
-        #gbfs_json = json.loads(gbfs_index.read())
-    except urllib2.URLError:
-        print "Couldn't access GBFS feed for " + df['bssid'] + "."
+
+        # see if any errors
+        gbfs_index.raise_for_status()
+
+    except urllib3.URLError:
+        print("Couldn't access GBFS feed for " + df['bssid'] + ".")
         return False
 
     # Get the two important urls with station status and station locations and names
@@ -32,28 +34,31 @@ def scrape(df, apikey):
             station_information_url = feed['url']
 
     if station_status_url == '' or station_information_url == '':
-        print "Did not find the feed for " + df['bssid'] + "."
-        print gbfs_json
+        print("Did not find the feed for " + df['bssid'] + ".")
+        print(gbfs_json)
         return False
 
     # Get the station information
     try:
         information_req = requests.get(station_information_url, df['bssid'])
         information_json = json.loads(information_req.text)
-        #information_req = bsrputil.get_url(station_information_url, df['bssid'])
-        #information_json = json.loads(information_req)
-    except urllib2.URLError:
-        print "Couldn't access station information for " + df['bssid'] + "."
+
+        # see if any errors
+        information_req.raise_for_status()
+
+    except urllib3.URLError:
+        print("Couldn't access station information for " + df['bssid'] + ".")
         return False
 
     # Get the station statuses
     try:
         status_req = requests.get(station_status_url, df['bssid'])
         status_json = json.loads(status_req.text)
-        #status_req = bsrputil.get_url(station_status_url, df['bssid'])
-        #status_json = json.loads(status_req)
-    except urllib2.URLError:
-        print "Couldn't access station status for " + df['bssid'] + "."
+
+        # see if any errors
+        status_req.raise_for_status()
+    except urllib3.URLError:
+        print("Couldn't access station status for " + df['bssid'] + ".")
         return False
 
     # Return both parts
@@ -75,7 +80,7 @@ def parse(df, data, utc):
         try:
             clean_stations_dict[stn['station_id']]['bikes'] = stn['num_bikes_available']
         except KeyError:
-            print 'Station ' + stn['station_id'] + ' does not exist in station information data. Dropping it from list.'
+            print('Station ' + stn['station_id'] + ' does not exist in station information data. Dropping it from list.')
             continue
 
         clean_stations_dict[stn['station_id']]['docks'] = stn['num_docks_available']
@@ -100,7 +105,7 @@ def parse(df, data, utc):
 
     # check if we have some data
     if len(clean_stations_list) == 0:
-        print utc + ' ' + df['bssid'] + " Parser did not find any station's data."
+        print(utc + ' ' + df['bssid'] + " Parser did not find any station's data.")
         return False
 
     return clean_stations_list
