@@ -1,6 +1,6 @@
 # Parser: transdev (e.g., Calais, Nice, Vannes)
 
-import json, urllib
+import json, urllib.parse # to unquote URL
 
 def parse(df, data, utc):
     # df is a dict with the following keys:
@@ -14,7 +14,7 @@ def parse(df, data, utc):
         return False
     
     # check if we retreived the station list
-    if not data_json.has_key('stand'):
+    if not 'stand' in data_json:
         print(utc + ' ' + df['bssid'] + " Data does not contain 'stand' element'. No data found.")
         return False
     
@@ -60,7 +60,7 @@ def parse(df, data, utc):
         else:
             name = stn['wcom']
 
-        name = urllib.unquote_plus(name).encode('iso-8859-1').decode('utf8')
+        name = urllib.parse.unquote_plus(name)
         if len(name.split(':')) > 1:
             name = name.split(' : ')[1]
 
