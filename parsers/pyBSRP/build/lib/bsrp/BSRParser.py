@@ -93,7 +93,7 @@ class BSRParser(object):
         self.apikey = apikey
         return self
 
-    def save_raw(self, path):
+    def save_raw(self, path=''):
         """Saves raw downloaded data into provided path. Filename will have format "[bssid] [UTC date time].txt". E.g., "boston_2015-10-31_13:26:52.txt" """
         if not self.raw_data:
             self.retrieve();
@@ -129,7 +129,7 @@ class BSRParser(object):
             self.retrieve();
         return self.raw_data
 
-    def save(self, path, schema='fullset'):
+    def save(self, path='', schema='fullset'):
         """Saves raw downloaded data into provided path. Filename will have format "[bssid] [UTC date time].txt". E.g., "boston_2015-10-31_13:26:52.txt" """
         if not self.raw_data:
             self.retrieve();

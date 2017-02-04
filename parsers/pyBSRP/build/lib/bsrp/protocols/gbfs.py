@@ -20,7 +20,7 @@ def scrape(df, apikey):
 
     # Get the two important urls with station status and station locations and names
     # Choose english if available
-    languages = gbfs_json['data'].keys()
+    languages = list(gbfs_json['data'])
     language = languages[0]
     if 'en' in languages:
         language = 'en'
@@ -89,7 +89,7 @@ def parse(df, data, utc):
             clean_stations_dict[stn['station_id']]['active'] = 'no'
 
     # Check that each station has been filled with some status
-    for stn in clean_stations_dict.keys():
+    for stn in list(clean_stations_dict):
         try:
             clean_stations_dict[stn]['active']
         except KeyError:

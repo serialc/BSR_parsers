@@ -6,7 +6,7 @@ def parse(df, data, utc):
     # [u'feedurl', u'feedname', u'bssid', u'format', u'feedurl2', u'keyreq', u'parsername', u'rid']
 
     # parse out desired info
-    soup = BeautifulSoup(data)
+    soup = BeautifulSoup(data, "html.parser")
     
     # capture clean results in clean_stations_list
     clean_stations_list = []
