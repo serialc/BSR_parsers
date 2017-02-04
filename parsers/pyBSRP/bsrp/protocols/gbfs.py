@@ -14,7 +14,7 @@ def scrape(df, apikey):
         # see if any errors
         gbfs_index.raise_for_status()
 
-    except urllib3.URLError:
+    except requests.exceptions.SSLError:
         print("Couldn't access GBFS feed for " + df['bssid'] + ".")
         return False
 
@@ -67,6 +67,9 @@ def scrape(df, apikey):
 def parse(df, data, utc):
     # df is a dict with the following keys:
     # [u'feedurl', u'feedname', u'bssid', u'format', u'feedurl2', u'keyreq', u'parsername', u'rid']
+
+    if not data:
+        return False
 
     clean_stations_dict = dict()
     # Go through station information
