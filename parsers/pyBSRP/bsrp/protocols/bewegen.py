@@ -18,7 +18,7 @@ def parse(df, data, utc):
     clean_stations_list = []
     for stn in json_data:
 
-        soup = BeautifulSoup(stn['popup'])
+        soup = BeautifulSoup(stn['popup'], "html.parser")
         b = soup.find_all('b')
         bikes = int(b[0].string)
         spaces = int(b[1].string)

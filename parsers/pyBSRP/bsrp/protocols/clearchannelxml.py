@@ -14,7 +14,7 @@ def parse(df, data, utc):
             break
 
     # parse out desired info
-    soup = BeautifulSoup(xml_data)
+    soup = BeautifulSoup(xml_data, "html.parser")
     
     # capture clean results in clean_stations_list
     clean_stations_list = []

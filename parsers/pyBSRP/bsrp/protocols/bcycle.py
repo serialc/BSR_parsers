@@ -49,7 +49,7 @@ def parse(df, data, utc):
                 xml_match = re.match("var marker = new createMarker\(point, \"(.+)\",", line)
 
                 if xml_match:
-                    soup = BeautifulSoup(xml_match.group(1))
+                    soup = BeautifulSoup(xml_match.group(1), "html.parser")
                     # we *should* have a full data set now, note there are no ids! id = 0
                     # determine type of syntax
                     if len(soup.find_all('strong')) == 3:
