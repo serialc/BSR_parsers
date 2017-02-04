@@ -98,8 +98,9 @@ class BSRParser(object):
         if not self.raw_data:
             self.retrieve();
 
+        fname = 'raw_' + self.df['bssid'] + '_' + self.utc + '.txt'
+
         try:
-            fname = 'raw_' + self.df['bssid'] + '_' + self.utc + '.txt'
             fh = open(path + fname, 'w')
 
             # check type of raw_data
@@ -108,6 +109,10 @@ class BSRParser(object):
             else:
                 # try this for other data types
                 fh.write(self.raw_data)
+            fh.close()
+        except UnicodeEncodeError:
+            fh = open(path + fname, 'w')
+            fh.write(ascii(self.schematize(schema=schema, return_type='string')))
             fh.close()
         except:
             print(self.utc + " Failed to save file path: " + path + fname)
@@ -140,6 +145,10 @@ class BSRParser(object):
         try:
             fh = open(path + fname, 'w')
             fh.write(self.schematize(schema=schema, return_type='string'))
+            fh.close()
+        except UnicodeEncodeError:
+            fh = open(path + fname, 'w')
+            fh.write(ascii(self.schematize(schema=schema, return_type='string')))
             fh.close()
         except:
             print(self.utc + " Failed to save file path: " + path + fname)
