@@ -44,17 +44,23 @@ for feed in feeds:
             # stns is not equal to false
             for stn in stns:
                 # print data array
-                print(ascii(stn))
+                try:
+                    print(stn)
+                except UnicodeEncodeError:
+                    print(ascii(stn))
 
-            print(ascii(parser.get_string()))
+            try:
+                print(parser.get_string())
+            except UnicodeEncodeError:
+                print(ascii(parser.get_string()))
 
             # save raw
             if isinstance(parser.get_raw(), str):
-                parser.save_raw( "" )
+                parser.save_raw()
                 print("Saved raw scraped data to " + bssid + "_test_results_raw.txt")
 
             # save cleaned
-            parser.save( "" )
+            parser.save()
             print("Saved cleaned and schematized output to " + bssid + "_test_results.txt")
 
         break
