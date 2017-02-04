@@ -24,13 +24,13 @@ def parse(df, data, utc):
         id += 1
 
         # Get station name
-        res_name = re.search("margin-bottom:10px\">(.+?)<", station.description.encode("utf-8")) # non-greedy name match
+        res_name = re.search("margin-bottom:10px\">(.+?)<", ascii(station.description)) # non-greedy name match
         if not res_name:
             # something weird, skip
             continue
 
         # Get bikes and spaces
-        res_bs = re.search(">([\-0-9]+?)<br\s?/>([\-0-9]*?)<br\s?/></div>(</div>)?]]", station.description.encode("utf-8"))
+        res_bs = re.search(">([\-0-9]+?)<br\s?/>([\-0-9]*?)<br\s?/></div>(</div>)?]]", ascii(station.description))
         if not res_bs:
             # something weird, skip
             continue
@@ -54,7 +54,7 @@ def parse(df, data, utc):
         docks = int(res_bs.group(1)) + int(res_bs.group(2))
 
         # we want stnid, lat, lng, docks, bikes, spaces, name, active
-        clean_stations_list.append([id, lat, lng, str(docks), res_bs.group(1), res_bs.group(2), res_name.group(1).decode('utf-8'), 'yes'])
+        clean_stations_list.append([id, lat, lng, str(docks), res_bs.group(1), res_bs.group(2), res_name.group(1), 'yes'])
 
     # check if we have some data
     if len(clean_stations_list) == 0:
