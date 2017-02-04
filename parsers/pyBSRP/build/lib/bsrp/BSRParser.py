@@ -112,7 +112,7 @@ class BSRParser(object):
             fh.close()
         except UnicodeEncodeError:
             fh = open(path + fname, 'w')
-            fh.write(ascii(self.schematize(schema=schema, return_type='string')))
+            fh.write(ascii(self.raw_data))
             fh.close()
         except:
             print(self.utc + " Failed to save file path: " + path + fname)
