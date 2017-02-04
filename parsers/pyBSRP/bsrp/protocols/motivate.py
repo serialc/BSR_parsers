@@ -20,7 +20,7 @@ def parse(df, data, utc):
         return False
     
     # check if we retreived the station list
-    if not data_json.has_key('stationBeanList'):
+    if not 'stationBeanList' in data_json:
         print(utc + ' ' + df['bssid'] + " Data does not contain 'stationBeanList' element'. No data found.")
         return False
     
