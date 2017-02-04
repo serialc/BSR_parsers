@@ -43,9 +43,10 @@ for feed in feeds:
         if stns:
             # stns is not equal to false
             for stn in stns:
-                print(stn)
+                # print data array
+                print(ascii(stn))
 
-            print(parser.get_string())
+            print(ascii(parser.get_string()))
 
             # save raw
             if isinstance(parser.get_raw(), str):
