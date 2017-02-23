@@ -62,7 +62,8 @@ def parse(df, data, utc):
 
         name = urllib.parse.unquote_plus(name)
         if len(name.split(':')) > 1:
-            name = name.split(' : ')[1]
+            # Nice has some bad newlines in station names
+            name = name.split(' : ')[1].replace('\r\n','')
 
         # we want stnid, lat, lng, docks, bikes, spaces, name, active
         clean_stations_list.append([stn['id'], lat, lng, str(docks), stn['ab'], stn['ap'], name, active])
