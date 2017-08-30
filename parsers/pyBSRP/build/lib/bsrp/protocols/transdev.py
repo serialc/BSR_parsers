@@ -66,7 +66,7 @@ def parse(df, data, utc):
             name = name.split(' : ')[1]
         
         # bad formatting for nice, fix
-        name = name.replace('\r\n','').replace('\n','')
+        name = name.replace('\r\n',' ').replace('\n',' ')
 
         # we want stnid, lat, lng, docks, bikes, spaces, name, active
         clean_stations_list.append([stn['id'], lat, lng, str(docks), stn['ab'], stn['ap'], name, active])
