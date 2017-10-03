@@ -13,6 +13,10 @@ def parse(df, data, utc):
     
     for station in soup.find_all('si'):
 
+        # skip bad lines
+        if station['na'] == '' and station['id'] == '':
+            continue
+
         # total number of docks
         docks = int(station['av']) + int(station['fr'])
 
