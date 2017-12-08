@@ -27,8 +27,11 @@ def parse(df, data, utc):
             active = 'yes'
         else:
             active = 'no'
+
+	stnid = stn['number']['serial_number'].split(' ')
+	stnid = stnid.pop()
         
-        clean_stations_list.append([stn['number'].split(' ')[1], stn['location'][0], stn['location'][1], str(bikes + spaces), bikes, spaces, stn['name'], active])
+        clean_stations_list.append([stnid, stn['location'][0], stn['location'][1], str(bikes + spaces), bikes, spaces, stn['name'], active])
 
     # check if we have some data
     if len(clean_stations_list) == 0:
