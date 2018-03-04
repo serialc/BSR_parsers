@@ -9,7 +9,8 @@ def scrape(df, apikey):
     # get the GBFS 'pointer' file that indicates paths to the key files
     try:
         gbfs_index = requests.get( df['feedurl'] )
-        if gbfs_json.status_code != 200:
+        
+        if gbfs_index.status_code != 200:
             return False
 
         # see if any other errors - throw
