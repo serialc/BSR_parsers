@@ -9,13 +9,18 @@ def scrape(df, apikey):
     # get the GBFS 'pointer' file that indicates paths to the key files
     try:
         gbfs_index = requests.get( df['feedurl'] )
-        gbfs_json = json.loads(gbfs_index.text)
+        if gbfs_json.status_code != 200:
+            return False
 
-        # see if any errors
+        # see if any other errors - throw
         gbfs_index.raise_for_status()
 
+        # parse to JSON
+        gbfs_json = json.loads(gbfs_index.text)
+
+
     except requests.exceptions.SSLError:
-        print("Couldn't access GBFS feed for " + df['bssid'] + ".")
+        print("Couldn't access GBFS feed for " + df['bssid'] + " due to SSL error.")
         return False
 
     # Get the two important urls with station status and station locations and names
