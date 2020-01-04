@@ -1,6 +1,5 @@
 # Parser: bewegen (baltimore)
 import json
-from bs4 import BeautifulSoup
 
 def parse(df, data, utc):
     # df is a dict with the following keys:
@@ -18,12 +17,10 @@ def parse(df, data, utc):
     clean_stations_list = []
     for stn in json_data:
 
-        soup = BeautifulSoup(stn['popup'], "html.parser")
-        b = soup.find_all('b')
-        bikes = int(b[0].string)
-        spaces = int(b[1].string)
+        bikes  = int(stn['total_locked_cycle_count'])
+        spaces = int(stn['free_dockes'])
 
-        if stn['type'] == "OPEN":
+        if stn['status'] == "OPEN":
             active = 'yes'
         else:
             active = 'no'

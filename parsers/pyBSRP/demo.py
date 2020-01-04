@@ -1,8 +1,8 @@
-import urllib2, json
+import urllib.request, json
 
 # Let's grab the lineage of the feed I want
-chicago = urllib2.urlopen('http://bikeshare-research.org/api/v1/categories/data/lineages/9/')
-chicago_feeds = chicago.read()
+chicago = urllib.request.urlopen('http://bikeshare-research.org/api/v1/categories/data/lineages/9/')
+chicago_feeds = chicago.read().decode("utf8")
 # [{"rid":"7","bssid":"chicago","feedname":"Divvy JSON","feedurl":"http://www.divvybikes.com/stations/json","feedurl2":"","format":"json","keyreq":"no","parsername":null},
 #  {"rid":"9","bssid":"chicago","feedname":"Divvy JSON","feedurl":"http://www.divvybikes.com/stations/json","feedurl2":"","format":"json","keyreq":"no","parsername":"motivate"}]
 # We see that the parsername was specified in the last update.
