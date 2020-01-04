@@ -1,16 +1,18 @@
 # gbfs.py
 # Parser: General Bikeshare Feed Specification
 
-import json, re, requests
-from bsrp import bsrputil
+import json, requests
+#from bsrp import bsrputil
 
 def scrape(df, apikey):
 
     # get the GBFS 'pointer' file that indicates paths to the key files
     try:
+        print("Trying:", df['feedurl'])
         gbfs_index = requests.get( df['feedurl'] )
         
         if gbfs_index.status_code != 200:
+            print("Retrieval returned ", gbfs_index.status_code)
             return False
 
         # see if any other errors - throw
@@ -19,6 +21,7 @@ def scrape(df, apikey):
         # parse to JSON
         gbfs_json = json.loads(gbfs_index.text)
 
+        print(gbfs_json)
 
     except requests.exceptions.SSLError:
         print("Couldn't access GBFS feed for " + df['bssid'] + " due to SSL error.")
@@ -46,8 +49,9 @@ def scrape(df, apikey):
 
     # Get the station information
     try:
-        information_req = requests.get(station_information_url, df['bssid'])
+        information_req = requests.get(station_information_url)
         information_json = json.loads(information_req.text)
+        print(information_json)
 
         # see if any errors
         information_req.raise_for_status()
@@ -58,8 +62,9 @@ def scrape(df, apikey):
 
     # Get the station statuses
     try:
-        status_req = requests.get(station_status_url, df['bssid'])
+        status_req = requests.get(station_status_url)
         status_json = json.loads(status_req.text)
+        print(status_json)
 
         # see if any errors
         status_req.raise_for_status()

@@ -23,8 +23,11 @@ class BSRParser(object):
             # module is not yet loaded
             pass
         self.proto = imp.load_source('protocol', os.path.dirname(os.path.abspath(__file__)) + '/protocols/' + bsr_feed['parsername'] + '.py')
-        #self.proto = imp.load_source('protocol', '/protocols/' + bsr_feed['parsername'] + '.py')
         self.df = bsr_feed
+
+        # clean feed url of white spaces
+        self.df['feedurl'] = self.df['feedurl'].strip()
+        self.df['feedurl2'] = self.df['feedurl2'].strip()
 
         # set defaults
         self.utc = ''
