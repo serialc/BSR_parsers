@@ -27,7 +27,8 @@ class BSRParser(object):
 
         # clean feed url of white spaces
         self.df['feedurl'] = self.df['feedurl'].strip()
-        self.df['feedurl2'] = self.df['feedurl2'].strip()
+        if self.df['feedurl2'] is not None:
+            self.df['feedurl2'] = self.df['feedurl2'].strip()
 
         # set defaults
         self.utc = ''

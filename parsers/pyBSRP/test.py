@@ -15,6 +15,9 @@ if len(sys.argv) == 3:
 try:
     res = requests.get("http://bikeshare-research.org/api/v1/categories/data/systems/" + bssid)
 
+    if res.ok:
+        print("Retrieved data feed meta data from BSR.")
+
     # raise error if one exists
     res.raise_for_status()
 except urllib3.URLError:
