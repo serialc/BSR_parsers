@@ -49,7 +49,7 @@ def scrape(df, apikey):
     try:
         information_req = requests.get(station_information_url)
         information_json = json.loads(information_req.text)
-        print(information_json)
+        #print(information_json)
 
         # see if any errors
         information_req.raise_for_status()
@@ -62,7 +62,7 @@ def scrape(df, apikey):
     try:
         status_req = requests.get(station_status_url)
         status_json = json.loads(status_req.text)
-        print(status_json)
+        #print(status_json)
 
         # see if any errors
         status_req.raise_for_status()
