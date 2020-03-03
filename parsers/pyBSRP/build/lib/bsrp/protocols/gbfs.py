@@ -21,8 +21,6 @@ def scrape(df, apikey):
         # parse to JSON
         gbfs_json = json.loads(gbfs_index.text)
 
-        print(gbfs_json)
-
     except requests.exceptions.SSLError:
         print("Couldn't access GBFS feed for " + df['bssid'] + " due to SSL error.")
         return False

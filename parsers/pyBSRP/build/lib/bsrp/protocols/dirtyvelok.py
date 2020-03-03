@@ -39,7 +39,7 @@ def parse(df, data, utc):
                 except AttributeError:
                     # this is because they also pass other non-BSS station junk in here that is formatted funny, just skip
                     continue
-                print(parts)
+                #print(parts)
 
                 stnid = re.search("photos/(.+)\.jpg", soup.find(class_="photoimg").attrs['style']).groups()[0]
 
