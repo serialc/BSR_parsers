@@ -25,6 +25,11 @@ class BSRParser(object):
         self.proto = imp.load_source('protocol', os.path.dirname(os.path.abspath(__file__)) + '/protocols/' + bsr_feed['parsername'] + '.py')
         self.df = bsr_feed
 
+        # clean feed url of white spaces
+        self.df['feedurl'] = self.df['feedurl'].strip()
+        if self.df['feedurl2'] is not None:
+            self.df['feedurl2'] = self.df['feedurl2'].strip()
+
         # set defaults
         self.utc = ''
         self.apikey = ''
@@ -42,14 +47,6 @@ class BSRParser(object):
 
     def retrieve(self):
         """Retrieves the parsed contents of the data feed from the operator's server."""
-
-        print("Begin testing")
-        # TESTING START
-        r = requests.get("https://eu.ftp.opendatasoft.com/star/gbfs/gbfs.json")
-        print(r.status_code)
-        print(json.loads(r.text))
-        # TESTING END
-
 
         if self.df['keyreq'] == 'yes' and self.apikey == '':
             print("Gathering data for this BSS (" + self.df['bssid'] + ") and parser (" + self.df['parsername'] + ") requires a key according to BSR. None is provided. Trying anyways.")

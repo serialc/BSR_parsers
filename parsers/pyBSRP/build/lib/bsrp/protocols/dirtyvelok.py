@@ -33,9 +33,14 @@ def parse(df, data, utc):
             for marker in line.split("],["):
 
                 parts = marker.split(',')
-                soup = BeautifulSoup(parts[0])
+                try:
+                    soup = BeautifulSoup(parts[0], features="lxml")
+                    name = soup.find(class_="titleveloh").text
+                except AttributeError:
+                    # this is because they also pass other non-BSS station junk in here that is formatted funny, just skip
+                    continue
+                print(parts)
 
-                name = soup.find(class_="titleveloh").text
                 stnid = re.search("photos/(.+)\.jpg", soup.find(class_="photoimg").attrs['style']).groups()[0]
 
                 tds = soup.find_all("td")
