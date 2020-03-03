@@ -34,7 +34,7 @@ def parse(df, data, utc):
 
                 parts = marker.split(',')
                 try:
-                    soup = BeautifulSoup(parts[0], features="lxml")
+                    soup = BeautifulSoup(parts[0], features="html.parser")
                     name = soup.find(class_="titleveloh").text
                 except AttributeError:
                     # this is because they also pass other non-BSS station junk in here that is formatted funny, just skip
