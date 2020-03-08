@@ -50,11 +50,13 @@ for feed in feeds:
                 try:
                     print(stn)
                 except UnicodeEncodeError:
+                    print("Encountered UnicodeEncodeError: Can't print results")
                     print(ascii(stn))
 
             try:
                 print(parser.get_string())
             except UnicodeEncodeError:
+                print("Encountered UnicodeEncodeError: Can't print results")
                 print(ascii(parser.get_string()))
 
             # save raw
