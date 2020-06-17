@@ -35,7 +35,7 @@ for feed in feeds:
         print("Using parser: " + feed['parsername'])
         parser = BSRParser(feed)
 
-        if apikey is not '':
+        if apikey != '':
             print(apikey)
             parser.set_apikey(apikey)
 
