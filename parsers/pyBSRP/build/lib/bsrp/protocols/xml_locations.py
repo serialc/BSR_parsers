@@ -16,7 +16,6 @@ def parse(df, data, utc):
         # status, unknown, assume if in list it is
         active = 'yes'
 
-        print(stn)
         docks = int(stn.dockings.string) + int(stn.bikes.string)
 
         try:
