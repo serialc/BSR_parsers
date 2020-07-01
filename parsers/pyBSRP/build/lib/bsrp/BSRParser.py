@@ -60,15 +60,17 @@ class BSRParser(object):
             self.complex_scrape = True
         else:
 
-            # Add apikey to end of request - at worst it's empty
-            headers = {'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:48.0) Gecko/20100101 Firefox/48.0',
+            headers = {'user-agent':'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0',
                     'accept-encoding':'gzip, deflate, br',
-                    'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                    'cache-control':'no-cache',
+                    'Upgrade-Insecure-Requests': '1',
+                    'DNT': '1',
+                    'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'cache-control':'max-age=0',
                     'accept-language':'en-US,en;q=0.5'
                     }
 
-            r = requests.get( self.df['feedurl'] + self.apikey, headers=headers)
+            # Add apikey to end of request - at worst it's empty
+            r = requests.get( self.df['feedurl'] + self.apikey, headers=headers, timeout=10)
 
             if r.status_code == 200:
                 self.raw_data = r.text
