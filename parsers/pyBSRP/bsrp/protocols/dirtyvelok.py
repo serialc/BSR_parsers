@@ -41,7 +41,13 @@ def parse(df, data, utc):
                     continue
                 #print(parts)
 
-                stnid = re.search("photos/(.+)\.jpg", soup.find(class_="photoimg").attrs['style']).groups()[0]
+                stnid = re.search("photos/(.+)\.jpg", soup.find(class_="photoimg").attrs['style'])
+                if not stnid:
+                    # probably not a BSS station, other marker type
+                    continue
+
+                # should be only/first item in list
+                stnid = stnid.groups()[0]
 
                 tds = soup.find_all("td")
                 if len(tds) != 6:
